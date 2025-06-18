@@ -1,0 +1,57 @@
+{
+  "name": "yabai-tomodachi",
+  "version": "0.1.0",
+  "description": "A friendly companion for Yabai - MCP server for AI-powered window management on macOS",
+  "main": "dist/index.js",
+  "runtime": "node",
+  "tools": [
+    {
+      "name": "yabai_query_spaces",
+      "description": "Query information about all spaces"
+    },
+    {
+      "name": "yabai_query_windows",
+      "description": "Query information about windows"
+    },
+    {
+      "name": "yabai_query_displays",
+      "description": "Query information about all displays"
+    },
+    {
+      "name": "yabai_focus_space",
+      "description": "Focus a specific space"
+    },
+    {
+      "name": "yabai_focus_window",
+      "description": "Focus a window by direction or window ID"
+    },
+    {
+      "name": "yabai_move_window",
+      "description": "Move current window to a space or swap with another window"
+    },
+    {
+      "name": "yabai_resize_window",
+      "description": "Resize the current window"
+    },
+    {
+      "name": "yabai_toggle_window",
+      "description": "Toggle window properties"
+    },
+    {
+      "name": "yabai_create_space",
+      "description": "Create a new space"
+    },
+    {
+      "name": "yabai_destroy_space",
+      "description": "Destroy a space"
+    },
+    {
+      "name": "yabai_label_space",
+      "description": "Set a label for a space"
+    },
+    {
+      "name": "yabai_set_layout",
+      "description": "Set the layout for current or specified space"
+    }
+  ]
+}

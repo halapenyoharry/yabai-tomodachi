@@ -1,0 +1,33 @@
+{
+  "name": "yabai-tomodachi",
+  "version": "0.1.0",
+  "description": "A friendly companion for Yabai - includes MCP server for AI-powered window management and a helpful menu bar app",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "mcp-dev ./dist/index.js",
+    "watch": "tsc --watch",
+    "lint": "eslint . --ext .ts",
+    "test": "jest"
+  },
+  "keywords": [
+    "mcp",
+    "yabai",
+    "window-manager",
+    "macos"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  }
+}
