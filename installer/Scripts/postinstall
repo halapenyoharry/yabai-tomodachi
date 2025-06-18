@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Post-installation script for Yabai-Tomodachi
+
+# Copy the launch agent to user's LaunchAgents directory
+CURRENT_USER=$(stat -f '%Su' /dev/console)
+USER_HOME=$(dscl . read /Users/"$CURRENT_USER" NFSHomeDirectory | awk '{print $2}')
+LAUNCH_AGENTS_DIR="$USER_HOME/Library/LaunchAgents"
+
+# Create LaunchAgents directory if it doesn't exist
+mkdir -p "$LAUNCH_AGENTS_DIR"
+
+# Copy the plist file
+cp "/Library/LaunchAgents/com.yabai.tomodachi.plist" "$LAUNCH_AGENTS_DIR/"
+chown "$CURRENT_USER:staff" "$LAUNCH_AGENTS_DIR/com.yabai.tomodachi.plist"
+
+# Don't auto-start - let user decide
+echo "Yabai-Tomodachi installed successfully!"
+echo "To start automatically at login, run:"
+echo "launchctl load ~/Library/LaunchAgents/com.yabai.tomodachi.plist"
+
+exit 0

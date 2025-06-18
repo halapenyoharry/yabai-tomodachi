@@ -37,14 +37,26 @@ Let Claude control your window management:
 
 ### Prerequisites
 - macOS with [Yabai](https://github.com/koekeishiya/yabai) installed
-- Node.js v16+ (for MCP server)
-- Swift (comes with macOS, for menu bar app)
+- Node.js v16+ (only for MCP server development)
+- Swift (comes with macOS, only for building from source)
 
-### Quick Start
+### Option 1: Install from Package (Easiest)
+Download the latest `YabaiTomodachi-1.0.0.pkg` from the [releases page](https://github.com/halapenyoharry/yabai-tomodachi/releases) and double-click to install.
+
+This installs:
+- YabaiRestarter app to `/Applications`
+- Launch agent (disabled by default)
+
+To auto-start at login:
+```bash
+launchctl load ~/Library/LaunchAgents/com.yabai.tomodachi.plist
+```
+
+### Option 2: Build from Source
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/yabai-tomodachi.git
+git clone https://github.com/halapenyoharry/yabai-tomodachi.git
 cd yabai-tomodachi
 ```
 
