@@ -6,7 +6,7 @@
     <string>com.yabai.tomodachi</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Applications/YabaiRestarter</string>
+        <string>/Applications/Yabai-Tomodachi.app/Contents/MacOS/Yabai-Tomodachi</string>
     </array>
     <key>RunAtLoad</key>
     <false/>

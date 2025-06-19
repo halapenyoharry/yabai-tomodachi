@@ -10,12 +10,12 @@ Yabai is a masterpiece of software engineering that transforms macOS window mana
 
 Yabai-Tomodachi provides two complementary tools:
 
-1. **YabaiRestarter** - A menu bar app for quick Yabai control
+1. **Yabai-Tomodachi Menu Bar** - A menu bar app for quick Yabai control
 2. **MCP Server** - AI-powered window management through Claude
 
 ## 🚀 Features
 
-### YabaiRestarter Menu Bar App
+### Yabai-Tomodachi Menu Bar App
 Simple, instant access to essential Yabai commands:
 
 - **Service Control**: Restart, stop, or start Yabai when it gets stuck
@@ -44,7 +44,7 @@ Let Claude control your window management:
 Download the latest `YabaiTomodachi-1.0.0.pkg` from the [releases page](https://github.com/halapenyoharry/yabai-tomodachi/releases) and double-click to install.
 
 This installs:
-- YabaiRestarter app to `/Applications`
+- Yabai-Tomodachi app to `/Applications`
 - Launch agent (disabled by default)
 
 To auto-start at login:

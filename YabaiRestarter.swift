@@ -9,7 +9,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: "Yabai")
+            // Try to load custom icon first, fall back to system icon
+            if let iconPath = Bundle.main.path(forResource: "YabaiTomodachi", ofType: "icns"),
+               let customIcon = NSImage(contentsOfFile: iconPath) {
+                customIcon.size = NSSize(width: 18, height: 18)
+                button.image = customIcon
+            } else {
+                button.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: "Yabai")
+            }
         }
         
         let menu = NSMenu()
@@ -169,8 +176,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func editConfig() {
-        runCommand("open ~/.yabairc")
-        showNotification("Config Opened", "Yabai config opened in default editor")
+        // Use -t flag to open as text file, avoiding Gatekeeper issues
+        runCommand("open -t ~/.yabairc")
+        showNotification("Config Opened", "Yabai config opened in text editor")
     }
     
     @objc func quit() {

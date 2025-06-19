@@ -15,3 +15,7 @@ YabaiRestarter
 
 # Old/archived implementations
 old/
+
+# Installer build artifacts
+installer/Payload/Applications/
+installer/Payload/Applications.old/
