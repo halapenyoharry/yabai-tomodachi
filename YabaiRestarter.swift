@@ -6,6 +6,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Check if Yabai is installed
+        checkYabaiInstallation()
+        
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
         if let button = statusItem.button {
@@ -209,6 +212,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         notification.title = title
         notification.informativeText = body
         NSUserNotificationCenter.default.deliver(notification)
+    }
+    
+    func checkYabaiInstallation() {
+        let task = Process()
+        task.launchPath = "/bin/bash"
+        task.arguments = ["-c", "which yabai"]
+        
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = pipe
+        
+        task.launch()
+        task.waitUntilExit()
+        
+        if task.terminationStatus != 0 {
+            // Yabai not found
+            let alert = NSAlert()
+            alert.messageText = "Yabai Not Found"
+            alert.informativeText = "Yabai-Tomodachi needs Yabai to work!\n\nWould you like to install Yabai now?"
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "Install Yabai")
+            alert.addButton(withTitle: "Later")
+            
+            if alert.runModal() == .alertFirstButtonReturn {
+                // Open Terminal with install command
+                let installScript = "curl -fsSL https://raw.githubusercontent.com/halapenyoharry/yabai-tomodachi/main/install-yabai.sh | bash"
+                let appleScript = """
+                tell application "Terminal"
+                    do script "\(installScript)"
+                    activate
+                end tell
+                """
+                
+                if let script = NSAppleScript(source: appleScript) {
+                    var error: NSDictionary?
+                    script.executeAndReturnError(&error)
+                }
+            }
+        }
     }
 }
 

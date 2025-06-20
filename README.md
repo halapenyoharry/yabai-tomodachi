@@ -1,48 +1,88 @@
-# Yabai-Tomodachi (Yabai Friend)
+# Yabai-Tomodachi
 
 <p align="center">
   <img src="icons/YabaiTomodachi.png" width="256" alt="Yabai-Tomodachi Icon">
 </p>
 
-A friendly companion toolkit for the incredible [Yabai](https://github.com/koekeishiya/yabai) window manager on macOS.
+<p align="center">
+  <b>Your friendly companion app for the incredibly powerful <a href="https://github.com/koekeishiya/yabai">Yabai</a> tiling window manager</b>
+</p>
 
-## 🙏 Tribute to Yabai
+## 🙏 A Tribute to koekeishiya's Yabai
 
-Yabai is a masterpiece of software engineering that transforms macOS window management. Its creator, koekeishiya, deserves the highest praise for building a tool that reduces cognitive overhead by 20-30% when multitasking on macOS. If there were a Nobel Prize for macOS applications, Yabai would win it for all time. This project exists to complement and celebrate Yabai's excellence.
+Yabai is a masterpiece of software engineering that transforms macOS window management. Its creator, koekeishiya, deserves the highest praise for building a tool that reduces cognitive overhead by 20-30% when multitasking on macOS. If there were a Nobel Prize for macOS applications, Yabai would win it for all time. 
+
+Yabai-Tomodachi exists to make this incredible power more accessible and friendly.
 
 ## 🎯 What is Yabai-Tomodachi?
 
-Yabai-Tomodachi provides two complementary tools:
+Yabai-Tomodachi is a companion app that helps you get the most out of Yabai. Think of it as your friendly guide to window management mastery.
 
-1. **Yabai-Tomodachi Menu Bar** - A menu bar app for quick Yabai control
-2. **MCP Server** - AI-powered window management through Claude
+### Currently Includes:
+
+**🖱️ Menu Bar App**
+- Instant access to essential Yabai commands
+- Restart Yabai when it gets stuck (the #1 user request!)
+- Quick layout switching without memorizing commands
+- Visual access to window controls
+
+**🤖 AI Integration (MCP Server)**
+- Natural language window management through Claude
+- Query and control windows programmatically
+- Build automated workspace workflows
+- Future-proof your window management
+
+### Coming Soon:
+- Keyboard shortcut manager
+- Visual layout designer
+- Workspace presets
+- And more based on community feedback!
 
 ## 🚀 Features
 
-### Yabai-Tomodachi Menu Bar App
-Simple, instant access to essential Yabai commands:
+**Essential Controls at Your Fingertips:**
+- **Service Management**: Restart, stop, or start Yabai instantly
+- **Window Controls**: Balance, float, fullscreen, split, and center windows
+- **Layout Switching**: Toggle between BSP (tiling), float, and stack modes
+- **Space Management**: Rotate layouts, mirror axes, adjust padding and gaps
+- **Quick Actions**: Edit Yabai config, reload settings, even restart the Dock
 
-- **Service Control**: Restart, stop, or start Yabai when it gets stuck
-- **Window Commands**: Balance, float, fullscreen, split, center windows
-- **Layout Control**: Switch between BSP (tiling), float, and stack layouts
-- **Space Management**: Rotate, mirror, adjust padding and gaps
-- **Quick Actions**: Edit config, reload settings, restart Dock
-
-### MCP Server for AI Integration
-Let Claude control your window management:
-
-- Query spaces, windows, and displays
-- Move and resize windows programmatically
-- Create and manage spaces
-- Set layouts and window properties
+**AI-Powered Automation:**
+- Tell Claude what you want: "Set up my coding workspace"
+- Query window information programmatically
+- Create complex window arrangements with simple commands
 - Build context-aware workspace automation
 
 ## 🛠 Installation
 
 ### Prerequisites
-- macOS with [Yabai](https://github.com/koekeishiya/yabai) installed
+- macOS 10.14+ (Mojave or later)
+- [Homebrew](https://brew.sh) (for easy Yabai installation)
 - Node.js v16+ (only for MCP server development)
 - Swift (comes with macOS, only for building from source)
+
+### Installing Yabai (if you haven't already)
+
+Yabai-Tomodachi needs [Yabai](https://github.com/koekeishiya/yabai) to work its magic. Here's the quick install:
+
+```bash
+# Install Yabai via Homebrew
+brew install koekeishiya/formulae/yabai
+
+# Start Yabai
+yabai --start-service
+
+# Optional but recommended: Install skhd for keyboard shortcuts
+brew install koekeishiya/formulae/skhd
+skhd --start-service
+```
+
+For detailed Yabai configuration and troubleshooting, check the [official Yabai wiki](https://github.com/koekeishiya/yabai/wiki).
+
+**Quick Install:** We also provide an install script:
+```bash
+curl -fsSL https://raw.githubusercontent.com/halapenyoharry/yabai-tomodachi/main/install-yabai.sh | bash
+```
 
 ### Option 1: Install from Package (Easiest)
 Download the latest `YabaiTomodachi-1.0.0.pkg` from the [releases page](https://github.com/halapenyoharry/yabai-tomodachi/releases) and double-click to install.
