@@ -9,12 +9,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
         if let button = statusItem.button {
-            // Try to load custom icon first, fall back to system icon
-            if let iconPath = Bundle.main.path(forResource: "YabaiTomodachi", ofType: "icns"),
-               let customIcon = NSImage(contentsOfFile: iconPath) {
-                customIcon.size = NSSize(width: 18, height: 18)
-                button.image = customIcon
-            } else {
+            // For standalone script, try multiple icon locations
+            let iconPaths = [
+                Bundle.main.path(forResource: "YabaiTomodachi", ofType: "icns"),
+                Bundle.main.bundlePath + "/Contents/Resources/YabaiTomodachi.icns",
+                FileManager.default.currentDirectoryPath + "/YabaiTomodachi.icns"
+            ]
+            
+            var iconLoaded = false
+            for path in iconPaths.compactMap({ $0 }) {
+                if let customIcon = NSImage(contentsOfFile: path) {
+                    customIcon.size = NSSize(width: 18, height: 18)
+                    button.image = customIcon
+                    iconLoaded = true
+                    break
+                }
+            }
+            
+            if !iconLoaded {
                 button.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: "Yabai")
             }
         }
@@ -72,17 +84,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func restartYabai() {
-        runCommand("brew services restart yabai")
+        runCommand("yabai --restart-service")
         showNotification("Yabai Restarted", "Yabai has been restarted")
     }
     
     @objc func stopYabai() {
-        runCommand("brew services stop yabai")
+        runCommand("yabai --stop-service")
         showNotification("Yabai Stopped", "Yabai has been stopped")
     }
     
     @objc func startYabai() {
-        runCommand("brew services start yabai")
+        runCommand("yabai --start-service")
         showNotification("Yabai Started", "Yabai has been started")
     }
     

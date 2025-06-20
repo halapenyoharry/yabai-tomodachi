@@ -1,5 +1,9 @@
 # Yabai-Tomodachi (Yabai Friend)
 
+<p align="center">
+  <img src="icons/YabaiTomodachi.png" width="256" alt="Yabai-Tomodachi Icon">
+</p>
+
 A friendly companion toolkit for the incredible [Yabai](https://github.com/koekeishiya/yabai) window manager on macOS.
 
 ## 🙏 Tribute to Yabai

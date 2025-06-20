@@ -88,3 +88,12 @@ This project is part of a larger vision to transform MCP from an AI-specific pro
 - Provide GUI access to MCP tools outside of AI contexts
 - Enable automation and scripting with MCP tools
 - Make MCP servers useful for everyday workflows
+
+## MCP Server Setup
+
+The MCP server is configured in Claude Desktop's config at:
+`~/Library/Application Support/Claude/claude_desktop_config.json`
+
+Entry name: `yabai-tomodachi`
+
+**Note**: On slower Macs, Yabai operations through MCP can be slow. The menu bar app provides instant access to common commands while the MCP server is better suited for future Mac Studio setups.
