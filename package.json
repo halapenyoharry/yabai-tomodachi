@@ -1,0 +1,29 @@
+{
+  "name": "yabai-tomadachi",
+  "version": "1.0.0",
+  "description": "A friendly companion tool for yabai window manager",
+  "main": "src/yabai-tomadachi.js",
+  "bin": {
+    "yabai-tomadachi": "./src/yabai-tomadachi.js",
+    "yabai-tomadachi-gui": "./src/yabai-tomadachi-gui.js"
+  },
+  "scripts": {
+    "start": "node src/yabai-tomadachi.js",
+    "start:gui": "electron src/yabai-tomadachi-gui.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "yabai",
+    "window-manager",
+    "macos",
+    "tiling"
+  ],
+  "author": "Harry",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "electron": "^32.0.0"
+  }
+}

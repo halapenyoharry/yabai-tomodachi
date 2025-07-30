@@ -24,11 +24,27 @@
         "iteration": 1,
         "timestamp": "2025-07-30T16:02:54Z",
         "approach": "code-archaeology",
-        "status": "started",
-        "decisions": [],
-        "breakthroughs": [],
-        "dead_ends": [],
-        "lessons": []
+        "status": "completed",
+        "decisions": [
+          "No existing code found - decided to recreate from concept",
+          "Built both CLI and GUI versions for flexibility",
+          "Used Node.js for cross-platform compatibility",
+          "Added Electron for menu bar integration"
+        ],
+        "breakthroughs": [
+          "yabai is already installed at /opt/homebrew/bin/yabai",
+          "Simple exec commands work well for yabai integration",
+          "Vi-like keybindings make CLI intuitive"
+        ],
+        "dead_ends": [
+          "No GitHub repos found for yabai-tomadachi",
+          "No local backup of original code"
+        ],
+        "lessons": [
+          "Sometimes 'archaeology' means reconstruction from memory",
+          "A friendly interface can make complex tools accessible",
+          "Both CLI and GUI serve different use cases"
+        ]
       }
     ],
     
