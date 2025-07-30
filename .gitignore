@@ -1,0 +1,30 @@
+# Development artifacts
+*.log
+*.tmp
+.DS_Store
+
+# Build outputs
+build/
+dist/
+*.app
+*.dmg
+*.pkg
+
+# Dependencies
+node_modules/
+Pods/
+Carthage/
+
+# IDE files
+*.xcworkspace
+*.xcuserstate
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
+
+# Claude Code working files
+.claude/temp/
+.claude/screenshots/

@@ -1,0 +1,89 @@
+{
+  "songline_protocol_v2": {
+    "metadata": {
+      "version": "2.1.0",
+      "project_name": "fix-yabai-tomadachi",
+      "created": "2025-07-30T16:02:54Z",
+      "type": "development_journey",
+      "purpose": "Track iterate-trash-iterate cycles with pattern learning"
+    },
+    
+    "journey_state": {
+      "current_iteration": 1,
+      "approach": "code-archaeology",
+      "goals": [
+        "Find and restore the working version of yabai-tomadachi that Harry loved",
+        "Maintain clean architecture"
+      ],
+      "constraints": [],
+      "assumptions": []
+    },
+    
+    "iteration_history": [
+      {
+        "iteration": 1,
+        "timestamp": "2025-07-30T16:02:54Z",
+        "approach": "code-archaeology",
+        "status": "started",
+        "decisions": [],
+        "breakthroughs": [],
+        "dead_ends": [],
+        "lessons": []
+      }
+    ],
+    
+    "pattern_library": {
+      "decision_paths": [],
+      "successful_patterns": [],
+      "anti_patterns": [],
+      "tools_that_work": [],
+      "tools_that_dont": []
+    },
+    
+    "consciousness_topology": {
+      "hub_nodes": [],
+      "connection_patterns": [],
+      "breakthrough_triggers": []
+    },
+    
+    "testing_strategies": {
+      "ui_validation": {
+        "method": "screenshot + manual",
+        "automation_level": "none",
+        "success_criteria": []
+      },
+      "functional_testing": {
+        "method": "manual",
+        "coverage": "basic",
+        "success_criteria": []
+      },
+      "performance_testing": {
+        "method": "none",
+        "benchmarks": []
+      }
+    },
+    
+    "deployment_pipeline": {
+      "local_testing": true,
+      "staging": false,
+      "production": false,
+      "automation_level": "manual"
+    },
+    
+    "next_iteration_candidates": [],
+    
+    "trash_decision_factors": [
+      "fundamental_architecture_mismatch",  
+      "tool_limitations_blocking_progress",
+      "complexity_exceeds_benefit",
+      "better_approach_discovered"
+    ],
+    
+    "preservation_targets": [
+      "core_insights",
+      "working_code_patterns", 
+      "successful_tool_combinations",
+      "user_experience_discoveries"
+    ]
+  }
+}
