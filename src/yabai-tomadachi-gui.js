@@ -147,9 +147,24 @@ class YabaiTomadachiGUI {
           {
             label: 'Padding',
             submenu: [
-              { label: 'None', click: () => this.runYabaiCommand('-m config top_padding 0 && -m config bottom_padding 0 && -m config left_padding 0 && -m config right_padding 0') },
-              { label: 'Small', click: () => this.runYabaiCommand('-m config top_padding 5 && -m config bottom_padding 5 && -m config left_padding 5 && -m config right_padding 5') },
-              { label: 'Medium', click: () => this.runYabaiCommand('-m config top_padding 10 && -m config bottom_padding 10 && -m config left_padding 10 && -m config right_padding 10') }
+              { label: 'None', click: () => {
+                this.runYabaiCommand('-m config top_padding 0');
+                this.runYabaiCommand('-m config bottom_padding 0');
+                this.runYabaiCommand('-m config left_padding 0');
+                this.runYabaiCommand('-m config right_padding 0');
+              }},
+              { label: 'Small', click: () => {
+                this.runYabaiCommand('-m config top_padding 5');
+                this.runYabaiCommand('-m config bottom_padding 5');
+                this.runYabaiCommand('-m config left_padding 5');
+                this.runYabaiCommand('-m config right_padding 5');
+              }},
+              { label: 'Medium', click: () => {
+                this.runYabaiCommand('-m config top_padding 10');
+                this.runYabaiCommand('-m config bottom_padding 10');
+                this.runYabaiCommand('-m config left_padding 10');
+                this.runYabaiCommand('-m config right_padding 10');
+              }}
             ]
           }
         ]

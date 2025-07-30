@@ -45,14 +45,56 @@
           "A friendly interface can make complex tools accessible",
           "Both CLI and GUI serve different use cases"
         ]
+      },
+      {
+        "iteration": 2,
+        "timestamp": "2025-07-30T17:00:00Z",
+        "approach": "proper-code-archaeology",
+        "status": "in_progress",
+        "decisions": [
+          "MISSION FAILURE ACKNOWLEDGED - Built something new instead of finding original",
+          "Restart with proper archaeology approach",
+          "Search for original yabai-tomadachi repo more thoroughly",
+          "Document what MCP server component actually did"
+        ],
+        "breakthroughs": [
+          "yabai v7.1.15 is installed and working",
+          "Found many yabai menubar apps but none with MCP integration",
+          "No 'yabai-tomadachi' or 'tomadachi' repos found related to yabai",
+          "MCP servers for macOS exist but none for window managers"
+        ],
+        "dead_ends": [
+          "No GitHub repo named 'yabai-tomadachi' exists",
+          "No yabai + MCP server combinations found",
+          "No 'tomadachi' projects related to window management"
+        ],
+        "lessons": [
+          "The original yabai-tomadachi may have been:",
+          "  - A private repo",
+          "  - Under a different name",
+          "  - Part of a larger project",
+          "  - A local-only tool that was never published",
+          "Need to understand what 'MCP server component' meant in context"
+        ]
       }
     ],
     
     "pattern_library": {
-      "decision_paths": [],
-      "successful_patterns": [],
+      "decision_paths": [
+        "Check for existing tool → Not found → Recreate from concept",
+        "Choose architecture → Node.js for CLI + Electron for GUI"
+      ],
+      "successful_patterns": [
+        "Vi-like keybindings for power users",
+        "Separate CLI and GUI versions for different use cases",
+        "Direct yabai command execution via exec"
+      ],
       "anti_patterns": [],
-      "tools_that_work": [],
+      "tools_that_work": [
+        "Node.js child_process for yabai integration",
+        "Electron for menu bar apps",
+        "readline for interactive CLI"
+      ],
       "tools_that_dont": []
     },
     
@@ -71,7 +113,11 @@
       "functional_testing": {
         "method": "manual",
         "coverage": "basic",
-        "success_criteria": []
+        "success_criteria": [
+          "CLI responds to all documented commands",
+          "GUI launches and shows in menu bar",
+          "yabai commands execute successfully"
+        ]
       },
       "performance_testing": {
         "method": "none",
@@ -86,7 +132,12 @@
       "automation_level": "manual"
     },
     
-    "next_iteration_candidates": [],
+    "next_iteration_candidates": [
+      "Add more advanced window management features",
+      "Create automated tests for yabai commands",
+      "Add configuration file support for custom keybindings",
+      "Implement window grouping and saved layouts"
+    ],
     
     "trash_decision_factors": [
       "fundamental_architecture_mismatch",  

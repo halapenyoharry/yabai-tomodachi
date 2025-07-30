@@ -63,7 +63,7 @@ class YabaiTomadachi {
 🌸 Yabai Tomadachi - Your Window Management Friend! 🌸
 
 Commands:
-  h/help     - Show this help
+  ?/help     - Show this help
   w          - Show window info
   s          - Show space info
   
@@ -93,12 +93,12 @@ Commands:
 
   start() {
     console.log('🌸 Welcome to Yabai Tomadachi! 🌸');
-    console.log('Type "h" for help\n');
+    console.log('Type "?" for help\n');
 
     this.rl.on('line', (input) => {
       switch(input.trim()) {
-        case 'h':
         case 'help':
+        case '?':
           this.showHelp();
           break;
         
