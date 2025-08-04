@@ -50,7 +50,7 @@
         "iteration": 2,
         "timestamp": "2025-07-30T17:00:00Z",
         "approach": "proper-code-archaeology",
-        "status": "in_progress",
+        "status": "completed",
         "decisions": [
           "MISSION FAILURE ACKNOWLEDGED - Built something new instead of finding original",
           "Restart with proper archaeology approach",
@@ -75,6 +75,35 @@
           "  - Part of a larger project",
           "  - A local-only tool that was never published",
           "Need to understand what 'MCP server component' meant in context"
+        ]
+      },
+      {
+        "iteration": 3,
+        "timestamp": "2025-08-04T01:30:00Z",
+        "approach": "restoration-from-original",
+        "status": "completed",
+        "decisions": [
+          "Found original repo at halapenyoharry/yabai-tomodachi",
+          "Restored Swift menu bar app with full functionality",
+          "Integrated MCP server for AI capabilities",
+          "Default to BSP layout to avoid confusion"
+        ],
+        "breakthroughs": [
+          "Original exists with Swift implementation + MCP",
+          "Menu bar app fully functional with all controls",
+          "Grid commands require float mode first",
+          "Testing shows all features work except minor issues"
+        ],
+        "dead_ends": [
+          "Launch scripts not suitable for packaged app",
+          "Grid layout on managed windows",
+          "Padding toggle visibility unclear"
+        ],
+        "lessons": [
+          "Swift menu bar apps are more native than Node.js",
+          "Default BSP layout solves initial confusion",
+          "Center window needs float first",
+          "Will package as proper macOS app next"
         ]
       }
     ],

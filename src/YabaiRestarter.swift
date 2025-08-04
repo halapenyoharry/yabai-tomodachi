@@ -88,7 +88,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func restartYabai() {
         runCommand("yabai --restart-service")
-        showNotification("Yabai Restarted", "Yabai has been restarted")
+        // Ensure BSP mode after restart
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.runCommand("yabai -m config layout bsp")
+        }
+        showNotification("Yabai Restarted", "Yabai restarted in BSP mode")
     }
     
     @objc func stopYabai() {
@@ -98,7 +102,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func startYabai() {
         runCommand("yabai --start-service")
-        showNotification("Yabai Started", "Yabai has been started")
+        // Give yabai a moment to start, then set BSP layout
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.runCommand("yabai -m config layout bsp")
+            self.runCommand("yabai -m space --balance")
+        }
+        showNotification("Yabai Started", "Yabai started in BSP mode")
     }
     
     @objc func reloadConfig() {
@@ -144,8 +153,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func centerWindow() {
+        // First make window float, then center it
+        runCommand("yabai -m window --toggle float")
         runCommand("yabai -m window --grid 6:6:1:1:4:4")
-        showNotification("Window Centered", "Window moved to center")
+        showNotification("Window Centered", "Window floated and centered")
     }
     
     // Layout Commands
