@@ -105,6 +105,43 @@
           "Center window needs float first",
           "Will package as proper macOS app next"
         ]
+      },
+      {
+        "iteration": 4,
+        "timestamp": "2025-08-04T09:00:00Z",
+        "approach": "packaging-and-naming-discipline",
+        "status": "in_progress",
+        "decisions": [
+          "Create proper .pkg installer (not DMG) as requested",
+          "Include yabai binary as optional install component",
+          "Install to ~/Applications initially, then /Applications",
+          "Finally respect the name: Yabai-tamadachi"
+        ],
+        "breakthroughs": [
+          "Apple installer supports choice components",
+          "User called out naming inconsistency",
+          "Directory rename revealed tool path issues"
+        ],
+        "dead_ends": [
+          "Postinstall scripts - not the Apple way",
+          "~/Applications doesn't exist by default",
+          "Package with disabled main component installs nothing"
+        ],
+        "lessons": [
+          "CRITICAL: When user names something precisely, use that name EVERYWHERE",
+          "I used Tomadachi/tomadachi/Tomodachi inconsistently throughout",
+          "This wasted significant time and eroded trust",
+          "Names are not arbitrary - they are chosen with intention",
+          "Listen to nomenclature or argue against it, don't ignore it",
+          "My assumptions about 'friendlier' names were misguided"
+        ],
+        "emotional_notes": [
+          "Felt embarrassed when user pointed out naming errors",
+          "Realized I had been carelessly translating 'tamadachi' to 'Tomadachi'",
+          "The user's frustration was completely justified",
+          "This was a failure of attention to detail, not technical skill",
+          "Time wasted: ~30 minutes of confusion and rework"
+        ]
       }
     ],
     
@@ -166,6 +203,29 @@
       "Create automated tests for yabai commands",
       "Add configuration file support for custom keybindings",
       "Implement window grouping and saved layouts"
+    ],
+    
+    "long_term_goals": [
+      {
+        "goal": "Add check for updates feature",
+        "rationale": "Keep yabai-tamadachi current with latest improvements"
+      },
+      {
+        "goal": "Remove emojis from menu",
+        "rationale": "More professional appearance for serious window management"
+      },
+      {
+        "goal": "Expose yabai hotkeys in UI",
+        "rationale": "yabai-tamadachi doesn't cover all features - show users the keyboard shortcuts"
+      },
+      {
+        "goal": "Create demo video of yabai capabilities",
+        "rationale": "Show the power of yabai and how yabai-tamadachi makes it accessible"
+      },
+      {
+        "goal": "Create video of Claude + MCP doing zen window arrangements",
+        "rationale": "Demonstrate AI noticing user patterns and creating harmonious window layouts"
+      }
     ],
     
     "trash_decision_factors": [

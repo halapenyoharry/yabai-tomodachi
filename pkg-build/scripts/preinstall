@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Check if yabai is installed
+if ! command -v yabai &> /dev/null; then
+    # yabai not found - show message but don't fail installation
+    echo "WARNING: yabai is not installed."
+    echo "yabai-tamadachi requires yabai to function."
+    echo ""
+    echo "To install yabai, run:"
+    echo "  brew install koekeishiya/formulae/yabai"
+    echo "  yabai --start-service"
+    echo ""
+    echo "For automatic updates:"
+    echo "  brew upgrade yabai"
+    echo ""
+    # Don't exit with error - let user install anyway
+fi
+
+exit 0
