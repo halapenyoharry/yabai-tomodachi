@@ -38,6 +38,13 @@
   ],
   "future": [
     {
+      "feature": "yabai Ecosystem Installer",
+      "description": "Discover and install companion tools for yabai",
+      "rationale": "Help users discover the rich ecosystem of yabai tools",
+      "implementation": "Add 'Ecosystem' menu with options to install: Stackline (stack indicators), Spacebar (status bar), YabaiIndicator (space switcher), skhd (hotkeys), etc. Show descriptions and let users choose what to install",
+      "tools": ["Stackline", "Spacebar", "YabaiIndicator", "skhd", "Nero", "others"]
+    },
+    {
       "feature": "Claude Desktop Extension",
       "description": "Replace MCP server with native Claude Desktop Extension",
       "rationale": "Much simpler for users - just install extension instead of Node.js setup",
