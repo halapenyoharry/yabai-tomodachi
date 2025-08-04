@@ -1,0 +1,43 @@
+{
+  "v1.1": [
+    {
+      "feature": "Quit dialog with preferences",
+      "description": "Ask user if they want to quit yabai when quitting yabai-tamadachi",
+      "implementation": "Add NSAlert with radio buttons, store preference in UserDefaults"
+    },
+    {
+      "feature": "Fix padding visibility",
+      "description": "Current padding toggle not clearly visible",
+      "implementation": "Add visual indicator or show current padding value in menu"
+    }
+  ],
+  "v1.2": [
+    {
+      "feature": "Check for updates",
+      "description": "Check GitHub for new releases",
+      "implementation": "Compare CFBundleShortVersionString with latest GitHub release tag"
+    },
+    {
+      "feature": "Show yabai hotkeys",
+      "description": "Display keyboard shortcuts in menu",
+      "implementation": "Add Hotkeys menu item with common yabai shortcuts"
+    }
+  ],
+  "v2.0": [
+    {
+      "feature": "Remove emojis from menu",
+      "description": "More professional appearance",
+      "implementation": "Keep tamadachi icon but remove emojis from menu item strings"
+    }
+  ],
+  "future": [
+    {
+      "feature": "Demo video - yabai capabilities",
+      "description": "Show what yabai can do with yabai-tamadachi"
+    },
+    {
+      "feature": "Demo video - Claude + MCP",
+      "description": "AI creating zen window arrangements based on user patterns"
+    }
+  ]
+}

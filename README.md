@@ -1,49 +1,177 @@
-# fix-yabai-tomadachi
+# yabai-tamadachi
 
-## Journey Overview
-- **Started**: 2025-07-30T16:02:54Z
-- **Type**: code-archaeology
-- **Primary Goal**: Find and restore the working version of yabai-tomadachi that Harry loved
+<p align="center">
+  <img src="assets/installer-welcome-message.rtfd/icon_128x128.png" width="256" height="256" alt="yabai-tamadachi icon">
+</p>
 
-## Current Status
-- **Iteration**: 1 (Initial Setup)
-- **Approach**: code-archaeology
-- **Stage**: Implementation Complete
-- **Result**: Successfully recreated yabai-tomadachi with both CLI and GUI versions
+<p align="center">Your friendly companion app for the incredibly powerful yabai tiling window manager</p>
 
-## Development Patterns
-This project uses songline journey tracking to maintain context across iterate-trash-iterate cycles.
+## 🙏 A Tribute to koekeishiya's yabai
 
-### Key Files
-- `songline.json` - Machine-readable journey tracking
-- `README.md` - Human-readable project overview
-- `.claude/` - Claude Code specific configurations and memories
+The yabai window manager is a masterpiece of software engineering that transforms macOS window management. Its creator, koekeishiya, deserves the highest praise for building a tool that reduces cognitive overhead by 20-30% when multitasking on macOS. If there were a Nobel Prize for macOS applications, yabai would win it for all time.
 
-### Testing Strategy
-- **UI Testing**: Screenshot validation + manual verification
-- **Functional Testing**: Manual testing of core features
-- **Integration Testing**: Local testing with real services
+yabai-tamadachi exists to make this incredible power more accessible and friendly.
 
-### Iteration Philosophy
-Each iteration is self-contained but learns from previous attempts. When we "trash" an approach, we preserve:
-- Core insights about the problem space
-- Working code patterns that solved sub-problems  
-- Tool combinations that worked well
-- User experience discoveries
+## 🎯 What is yabai-tamadachi?
 
-## Usage with Claude Code
+A companion app that helps you get the most out of yabai. Think of it as your friendly guide to window management mastery.
+
+**Currently Includes:**
+
+**🖱️ Menu Bar App**
+- Instant access to essential yabai commands
+- Restart yabai when it gets stuck (the #1 user request!)
+- Quick layout switching without memorizing commands
+- Visual access to window controls
+
+**🤖 AI Integration (MCP Server)**
+- Natural language window management through Claude
+- Query and control windows programmatically
+- Build automated workspace workflows
+- Future-proof your window management
+
+**Coming Soon:**
+- Keyboard shortcut manager
+- Visual layout designer
+- Workspace presets
+- And more based on community feedback!
+
+## 🚀 Features
+
+**Essential Controls at Your Fingertips:**
+- **Service Management:** Restart, stop, or start yabai instantly
+- **Window Controls:** Balance, float, fullscreen, split, and center windows
+- **Layout Switching:** Toggle between BSP (tiling), float, and stack modes
+- **Space Management:** Rotate layouts, mirror axes, adjust padding and gaps
+- **Quick Actions:** Edit yabai config, reload settings, even restart the Dock
+
+**AI-Powered Automation:**
+- Tell Claude what you want: "Set up my coding workspace"
+- Query window information programmatically
+- Create complex window arrangements with simple commands
+- Build context-aware workspace automation
+
+## 🛠 Installation
+
+### Prerequisites
+- macOS 10.14+
+- yabai window manager
+- Node.js 16+ (only for MCP server)
+
+### Quick Install
+
+**Option 1: Download Package (Easiest)**
+
+Download `yabai-tamadachi-installer.pkg` from this repository and run it.
+
+**Option 2: Build from Source**
+
 ```bash
-# Start development
-cc "Continue working on fix-yabai-tomadachi, review the songline for context"
+# Clone and build
+git clone https://github.com/halapenyoharry/yabai-tomodachi.git
+cd yabai-tomodachi
 
-# Test current iteration  
-cc "Test the current build and take screenshots for verification"
-
-# Iterate on specific feature
-cc "Improve the [feature] based on testing results"
-
-# Major pivot
-cc "The current approach isn't working, archive this iteration and try [new-approach]"
+# Compile menu bar app
+swiftc src/YabaiRestarter.swift -o yabai-tamadachi
+./yabai-tamadachi
 ```
 
-The songline.json will automatically track decisions, breakthroughs, and pattern evolution across all iterations.
+### Installing yabai (if needed)
+
+```bash
+brew install koekeishiya/formulae/yabai
+yabai --start-service
+```
+
+For detailed yabai setup, see the [official wiki](https://github.com/koekeishiya/yabai/wiki).
+
+### MCP Server Setup (for Claude integration)
+
+```bash
+# Build TypeScript
+npm install
+npm run build
+
+# Add to Claude Desktop config
+# ~/Library/Application Support/Claude/claude_desktop_config.json
+```
+
+Add this to your Claude config:
+```json
+{
+  "mcpServers": {
+    "yabai-tamadachi": {
+      "command": "node",
+      "args": ["/absolute/path/to/yabai-tamadachi/dist/index.js"]
+    }
+  }
+}
+```
+
+## 💡 Usage Examples
+
+**Menu Bar App**
+
+Click the menu bar icon to:
+- Quickly restart yabai when windows get stuck
+- Switch layouts on the fly
+- Balance window sizes
+- Adjust gaps and padding
+
+**Claude Integration**
+
+Tell Claude things like:
+- "Set up my workspace for React development"
+- "Move all browsers to space 2"
+- "Make the current window float"
+- "Balance all windows on this space"
+- "Create a new space for documentation"
+
+## 🎨 The Vision
+
+Imagine AI that understands your workspace:
+- Automatically arranges windows based on your current task
+- Moves documentation to one screen, code to another
+- Hides distracting apps when you need to focus
+- Saves and restores project-specific layouts
+- Responds to natural language workspace requests
+
+## 📝 MCP Tools Available
+
+The MCP server provides 12 tools:
+
+**Query Operations**
+- `query_spaces` - Get information about all spaces
+- `query_windows` - Query windows with filters
+- `query_displays` - Get display information
+
+**Window Management**
+- `focus_window` - Focus by direction or ID
+- `move_window_to_space` - Move windows between spaces
+- `resize_window` - Resize by pixels
+- `toggle_window_property` - Toggle float, sticky, etc.
+
+**Space Management**
+- `create_space` - Create new spaces
+- `destroy_space` - Remove spaces
+- `label_space` - Name your spaces
+- `set_space_layout` - Change layout modes
+- `focus_space` - Switch to specific spaces
+
+## 🤝 Contributing
+
+Contributions are welcome! This project aims to enhance the yabai experience while respecting its design philosophy.
+
+## 📄 License
+
+MIT License - Same as yabai, because we believe in the same principles of open software.
+
+## 🙏 Acknowledgments
+
+- **koekeishiya** - Creator of yabai, the foundation this project builds upon
+- The yabai community for continuous inspiration
+- Anthropic for the MCP protocol that enables AI integration
+
+---
+
+*Tamadachi (友達) means "friend" in Japanese. This project aims to be a helpful friend to both yabai and its users.*
