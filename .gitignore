@@ -28,6 +28,7 @@ Carthage/
 # Claude Code working files
 .claude/temp/
 .claude/screenshots/
+songline.json
 
 # Package build intermediates
 pkg-build/*.pkg
