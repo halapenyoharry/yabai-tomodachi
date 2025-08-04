@@ -1,6 +1,12 @@
 {
   "v1.1": [
     {
+      "feature": "Smart yabai installer detection",
+      "description": "Check if yabai is already installed and disable (but keep visible) the install option",
+      "rationale": "Prevents confusion and accidental reinstalls while showing transparency",
+      "implementation": "Modify preinstall script to set installer choice enabled state based on yabai presence"
+    },
+    {
       "feature": "Quit dialog with preferences",
       "description": "Ask user if they want to quit yabai when quitting yabai-tamadachi",
       "implementation": "Add NSAlert with radio buttons, store preference in UserDefaults"
