@@ -32,6 +32,12 @@
   ],
   "future": [
     {
+      "feature": "Claude Desktop Extension",
+      "description": "Replace MCP server with native Claude Desktop Extension",
+      "rationale": "Much simpler for users - just install extension instead of Node.js setup",
+      "implementation": "Wait for Anthropic to release Desktop Extension API, then port MCP tools"
+    },
+    {
       "feature": "Demo video - yabai capabilities",
       "description": "Show what yabai can do with yabai-tamadachi"
     },

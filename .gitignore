@@ -39,3 +39,6 @@ pkg-build/*.tar.gz
 # Local installer packages
 *-installer.pkg
 yabai-tamadachi-installer.pkg
+
+# Old files archive
+old/
