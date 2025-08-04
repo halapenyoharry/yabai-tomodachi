@@ -1,10 +1,11 @@
 # yabai-tamadachi
+<p align="center">Your friendly companion app for the incredibly powerful <a href="https://github.com/koekeishiya/yabai">yabai</a> window manager, and an innovative connector for the power of MCP protocol and yabai</p>
 
 <p align="center">
   <img src="assets/installer-welcome-message.rtfd/icon_128x128.png" width="256" height="256" alt="yabai-tamadachi icon">
 </p>
 
-<p align="center">Your friendly companion app for the incredibly powerful <a href="https://github.com/koekeishiya/yabai">yabai</a> window manager, and an innovative connector for the power of MCP protocol and yabai</p>
+
 
 ## 🙏 A Tribute to koekeishiya's yabai
 
