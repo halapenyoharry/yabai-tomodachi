@@ -8,7 +8,6 @@ build/
 dist/
 *.app
 *.dmg
-*.pkg
 
 # Dependencies
 node_modules/
@@ -31,14 +30,9 @@ Carthage/
 songline.json
 
 # Package build intermediates
-pkg-build/*.pkg
 pkg-build/yabai-root/
 pkg-build/archive/
 pkg-build/*.tar.gz
-
-# Local installer packages
-*-installer.pkg
-yabai-tamadachi-installer.pkg
 
 # Old files archive
 old/
