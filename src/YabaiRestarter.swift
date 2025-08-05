@@ -214,7 +214,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func runCommand(_ command: String) {
         let task = Process()
         task.launchPath = "/bin/bash"
-        task.arguments = ["-c", command]
+        // Set PATH to include common yabai locations
+        let shellCommand = "export PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:$PATH; " + command
+        task.arguments = ["-c", shellCommand]
         task.launch()
     }
     
@@ -226,18 +228,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func checkYabaiInstallation() {
-        let task = Process()
-        task.launchPath = "/bin/bash"
-        task.arguments = ["-c", "which yabai"]
+        // Check common yabai installation locations
+        let possiblePaths = [
+            "/opt/homebrew/bin/yabai",     // Homebrew on Apple Silicon
+            "/usr/local/bin/yabai",         // Homebrew on Intel or our installer
+            "/usr/bin/yabai"                // System location
+        ]
         
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
+        var yabaiFound = false
+        for path in possiblePaths {
+            if FileManager.default.fileExists(atPath: path) {
+                yabaiFound = true
+                break
+            }
+        }
         
-        task.launch()
-        task.waitUntilExit()
-        
-        if task.terminationStatus != 0 {
+        if !yabaiFound {
             // Yabai not found
             let alert = NSAlert()
             alert.messageText = "Yabai Not Found"
