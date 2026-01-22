@@ -1,8 +1,8 @@
-# yabai-tamadachi
+# yabai-tomodachi
 <p align="center">Your friendly companion app for the incredibly powerful <a href="https://github.com/koekeishiya/yabai">yabai</a> window manager, and an innovative connector for the power of MCP protocol and yabai</p>
 
 <p align="center">
-  <img src="assets/installer-welcome-message.rtfd/icon_128x128.png" width="256" height="256" alt="yabai-tamadachi icon">
+  <img src="assets/installer-welcome-message.rtfd/icon_128x128.png" width="256" height="256" alt="yabai-tomodachi icon">
 </p>
 
 
@@ -11,9 +11,9 @@
 
 The [yabai](https://github.com/koekeishiya/yabai) window manager is a masterpiece of software engineering that transforms macOS window management. Its creator, koekeishiya, deserves the highest praise for building a tool that reduces cognitive overhead by 20-30% when multitasking on macOS. If there were a Nobel Prize for macOS applications, yabai would win it for all time.
 
-yabai-tamadachi exists to make this incredible power more accessible and friendly.
+yabai-tomodachi exists to make this incredible power more accessible and friendly.
 
-## 🎯 What is yabai-tamadachi?
+## 🎯 What is yabai-tomodachi?
 
 A companion app that helps you get the most out of [yabai](https://github.com/koekeishiya/yabai). Think of it as your friendly guide to window management mastery.
 
@@ -63,7 +63,7 @@ A companion app that helps you get the most out of [yabai](https://github.com/ko
 
 **Option 1: Download Package (Easiest)**
 
-Download `yabai-tamadachi-installer.pkg` from this repository and run it.
+Download `yabai-tomodachi-installer.pkg` from this repository and run it.
 
 **Option 2: Build from Source**
 
@@ -73,8 +73,8 @@ git clone https://github.com/halapenyoharry/yabai-tomodachi.git
 cd yabai-tomodachi
 
 # Compile menu bar app
-swiftc src/YabaiRestarter.swift -o yabai-tamadachi
-./yabai-tamadachi
+swiftc src/YabaiRestarter.swift -o yabai-tomodachi
+./yabai-tomodachi
 ```
 
 ### Installing yabai (if needed)
@@ -88,26 +88,36 @@ For detailed [yabai](https://github.com/koekeishiya/yabai) setup, see the [offic
 
 ### MCP Server Setup (for Claude integration)
 
+1. **Build the MCP server** (in the yabai-tomodachi folder):
 ```bash
-# Build TypeScript
 npm install
 npm run build
-
-# Add to Claude Desktop config
-# ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 
-Add this to your Claude config:
+2. **Find your Claude Desktop config file**:
+   - Open Finder
+   - Press `Cmd+Shift+G` and paste: `~/Library/Application Support/Claude/`
+   - Open the file `claude_desktop_config.json`
+
+3. **Add yabai-tomodachi to your config**:
+   - Look for the `"mcpServers": {` section
+   - Add a comma after the last server entry
+   - Add these lines before the closing `}` of mcpServers:
+
 ```json
-{
-  "mcpServers": {
-    "yabai-tamadachi": {
+    "yabai-tomodachi": {
       "command": "node",
-      "args": ["/absolute/path/to/yabai-tamadachi/dist/index.js"]
+      "args": [
+        "/absolute/path/to/yabai-tomodachi/dist/index.js"
+      ]
     }
-  }
-}
 ```
+
+**Important**: Replace `/absolute/path/to/yabai-tomodachi` with your actual path, like:
+- If you cloned to Projects: `/Users/harold/Projects/yabai-tomodachi/dist/index.js`
+- If you put it in mcp-servers: `/Users/harold/mcp-servers/yabai-tomodachi/dist/index.js`
+
+4. **Save the file** and restart Claude Desktop for changes to take effect.
 
 ## 💡 Usage Examples
 
@@ -185,4 +195,4 @@ Explore the rich ecosystem of [yabai](https://github.com/koekeishiya/yabai) comp
 
 ---
 
-*Tamadachi (友達) means "friend" in Japanese. This project aims to be a helpful friend to both [yabai](https://github.com/koekeishiya/yabai) and its users.*
+*Tomodachi (友達) means "friend" in Japanese. This project aims to be a helpful friend to both [yabai](https://github.com/koekeishiya/yabai) and its users.*

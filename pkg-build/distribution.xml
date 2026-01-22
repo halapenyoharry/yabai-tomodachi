@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <installer-gui-script minSpecVersion="2">
-    <title>yabai-tamadachi</title>
+    <title>yabai-tomodachi</title>
     <organization>com.halapenyoharry</organization>
     <domains enable_localSystem="true" enable_currentUserHome="true"/>
     <options customize="always" require-scripts="false" hostArchitectures="arm64,x86_64"/>
     
     <welcome file="welcome.rtf" mime-type="text/rtf"/>
+    <license file="LICENSE.txt" mime-type="text/plain"/>
     
     <choices-outline>
-        <line choice="com.halapenyoharry.yabai-tamadachi"/>
-        <line choice="com.halapenyoharry.yabai-tamadachi.yabai"/>
+        <line choice="com.halapenyoharry.yabai-tomodachi"/>
+        <line choice="com.halapenyoharry.yabai-tomodachi.yabai"/>
     </choices-outline>
     
-    <choice id="com.halapenyoharry.yabai-tamadachi" title="yabai-tamadachi" enabled="true" selected="true" visible="true">
-        <pkg-ref id="com.halapenyoharry.yabai-tamadachi.app"/>
+    <choice id="com.halapenyoharry.yabai-tomodachi" title="yabai-tomodachi" enabled="true" selected="true" visible="true">
+        <pkg-ref id="com.halapenyoharry.yabai-tomodachi.app"/>
     </choice>
     
-    <choice id="com.halapenyoharry.yabai-tamadachi.yabai" title="yabai window manager" 
-            description="Install yabai window manager binary (required for yabai-tamadachi to function). Uncheck if you prefer to install via Homebrew."
+    <choice id="com.halapenyoharry.yabai-tomodachi.yabai" title="yabai window manager" 
+            description="Install yabai window manager binary (required for yabai-tomodachi to function). Uncheck if you prefer to install via Homebrew."
             enabled="true" selected="true" visible="true">
-        <pkg-ref id="com.halapenyoharry.yabai-tamadachi.yabai.pkg"/>
+        <pkg-ref id="com.halapenyoharry.yabai-tomodachi.yabai.pkg"/>
     </choice>
     
-    <pkg-ref id="com.halapenyoharry.yabai-tamadachi.app">yabai-tamadachi-app.pkg</pkg-ref>
-    <pkg-ref id="com.halapenyoharry.yabai-tamadachi.yabai.pkg">yabai-binary.pkg</pkg-ref>
+    <pkg-ref id="com.halapenyoharry.yabai-tomodachi.app">yabai-tomodachi-app.pkg</pkg-ref>
+    <pkg-ref id="com.halapenyoharry.yabai-tomodachi.yabai.pkg">yabai-binary.pkg</pkg-ref>
 </installer-gui-script>

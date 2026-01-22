@@ -8,7 +8,7 @@
     },
     {
       "feature": "Quit dialog with preferences",
-      "description": "Ask user if they want to quit yabai when quitting yabai-tamadachi",
+      "description": "Ask user if they want to quit yabai when quitting yabai-tomodachi",
       "implementation": "Add NSAlert with radio buttons, store preference in UserDefaults"
     },
     {
@@ -33,7 +33,7 @@
     {
       "feature": "Remove emojis from menu",
       "description": "More professional appearance",
-      "implementation": "Keep tamadachi icon but remove emojis from menu item strings"
+      "implementation": "Keep tomodachi icon but remove emojis from menu item strings"
     }
   ],
   "future": [
@@ -52,7 +52,7 @@
     },
     {
       "feature": "Demo video - yabai capabilities",
-      "description": "Show what yabai can do with yabai-tamadachi"
+      "description": "Show what yabai can do with yabai-tomodachi"
     },
     {
       "feature": "Demo video - Claude + MCP",

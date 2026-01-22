@@ -3,7 +3,7 @@
 const { execSync, exec } = require('child_process');
 const readline = require('readline');
 
-class YabaiTomadachi {
+class YabaiTomodachi {
   constructor() {
     this.yabaiPath = '/opt/homebrew/bin/yabai';
     this.rl = readline.createInterface({
@@ -203,5 +203,5 @@ try {
   process.exit(1);
 }
 
-const tomadachi = new YabaiTomadachi();
-tomadachi.start();
+const tomodachi = new YabaiTomodachi();
+tomodachi.start();

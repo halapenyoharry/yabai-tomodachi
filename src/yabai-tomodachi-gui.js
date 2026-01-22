@@ -4,7 +4,7 @@ const { app, Menu, Tray, globalShortcut, dialog } = require('electron');
 const { execSync } = require('child_process');
 const path = require('path');
 
-class YabaiTomadachiGUI {
+class YabaiTomodachiGUI {
   constructor() {
     this.yabaiPath = '/opt/homebrew/bin/yabai';
     this.tray = null;
@@ -239,8 +239,8 @@ class YabaiTomadachiGUI {
 }
 
 app.whenReady().then(() => {
-  const tomadachi = new YabaiTomadachiGUI();
-  tomadachi.init();
+  const tomodachi = new YabaiTomodachiGUI();
+  tomodachi.init();
 });
 
 app.on('window-all-closed', (e) => {

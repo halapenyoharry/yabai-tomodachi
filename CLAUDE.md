@@ -4,19 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-yabai-tamadachi is a companion app for the yabai window manager on macOS, providing both a menu bar GUI and an MCP (Model Context Protocol) server for AI integration. The project enables AI to have full awareness and control of desktop window management through natural language.
+yabai-tomodachi is a companion app for the yabai window manager on macOS, providing both a menu bar GUI and an MCP (Model Context Protocol) server for AI integration. The project enables AI to have full awareness and control of desktop window management through natural language.
 
 ## Build Commands
 
 ### Menu Bar App (Swift)
 ```bash
 # Compile the Swift menu bar app with icon support
-swiftc src/YabaiRestarter.swift -o yabai-tamadachi
+swiftc src/YabaiRestarter.swift -o yabai-tomodachi
 
 # Create app bundle (required for icon)
-mkdir -p yabai-tamadachi.app/Contents/MacOS yabai-tamadachi.app/Contents/Resources
-cp yabai-tamadachi yabai-tamadachi.app/Contents/MacOS/
-cp YabaiTomodachi.icns yabai-tamadachi.app/Contents/Resources/
+mkdir -p yabai-tomodachi.app/Contents/MacOS yabai-tomodachi.app/Contents/Resources
+cp yabai-tomodachi yabai-tomodachi.app/Contents/MacOS/
+cp YabaiTomodachi.icns yabai-tomodachi.app/Contents/Resources/
 # Also create Info.plist with proper CFBundleIconFile reference
 ```
 
@@ -36,10 +36,10 @@ npm run dev
 ```bash
 cd pkg-build
 # Build component package
-pkgbuild --root yabai-root --identifier com.halapenyoharry.yabai-tamadachi --version 1.0.0 --scripts scripts --install-location / yabai-tamadachi.pkg
+pkgbuild --root yabai-root --identifier com.halapenyoharry.yabai-tomodachi --version 1.0.0 --scripts scripts --install-location / yabai-tomodachi.pkg
 
 # Build distribution package
-productbuild --distribution distribution.xml --resources . --package-path . ../yabai-tamadachi-installer.pkg
+productbuild --distribution distribution.xml --resources . --package-path . ../yabai-tomodachi-installer.pkg
 ```
 
 ## Architecture
@@ -71,7 +71,7 @@ productbuild --distribution distribution.xml --resources . --package-path . ../y
 
 ## Critical Naming
 
-**IMPORTANT**: The project name is "yabai-tamadachi" (not "tomadachi" or any variation). This precise naming must be maintained everywhere - in code, packages, and documentation.
+**IMPORTANT**: The project name is "yabai-tomodachi" (not "tamadachi" or any variation). This precise naming must be maintained everywhere - in code, packages, and documentation.
 
 ## yabai Integration
 
