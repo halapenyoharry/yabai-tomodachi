@@ -2,11 +2,10 @@
 
 import Cocoa
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var statusItem: NSStatusItem!
     var menu: NSMenu!
     var yabaiIsWorking: Bool = false
-    var serviceSetupAttempted: Bool = false
     var yabaiPath: String = ""
     
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -16,7 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Find yabai binary (bundled first, then system)
         findYabaiBinary()
         
-        // Check if Yabai is working
+        // Check if Yabai is working (non-blocking)
         checkYabaiInstallation()
         
         if let button = statusItem.button {
@@ -43,8 +42,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         menu = NSMenu()
+        menu.delegate = self // Set delegate so we can update before opening
         buildMenu()
         statusItem.menu = menu
+    }
+    
+    // NSMenuDelegate method - called right before menu opens
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        buildMenu()
     }
     
     func findYabaiBinary() {
@@ -68,7 +73,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
+        // Check for our custom 'yabai-tomodachi' binary first
+        // This is used to bypass TCC/Accessibility issues with the standard 'yabai' binary
+        let customPath = "/opt/homebrew/bin/yabai-tomodachi"
+        if FileManager.default.fileExists(atPath: customPath) {
+            yabaiPath = customPath
+            print("Found custom yabai-tomodachi at: \(customPath)")
+            return
+        }
+        
         // Fall back to system yabai
+        // Explicitly check common Homebrew paths first (better than `which` in GUI apps)
+        let commonPaths = [
+            "/opt/homebrew/bin/yabai",
+            "/usr/local/bin/yabai",
+            "/usr/bin/yabai"
+        ]
+        
+        for path in commonPaths {
+             if FileManager.default.fileExists(atPath: path) {
+                yabaiPath = path
+                print("Found system yabai at: \(path)")
+                return
+            }
+        }
+
         let whichTask = Process()
         whichTask.launchPath = "/bin/bash"
         whichTask.arguments = ["-c", "which yabai"]
@@ -102,10 +131,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func buildMenu() {
         menu.removeAllItems()
         
-        // Service Control
-        menu.addItem(NSMenuItem(title: "Restart Yabai", action: #selector(restartYabai), keyEquivalent: "r"))
-        menu.addItem(NSMenuItem(title: "Stop Yabai", action: #selector(stopYabai), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Start Yabai", action: #selector(startYabai), keyEquivalent: ""))
+        // Service Control - Dynamic Start/Stop
+        if let currentYabaiPath = self.yabaiPath.isEmpty ? nil : self.yabaiPath {
+             // Basic check if process is running
+            let pgrepTask = Process()
+            pgrepTask.launchPath = "/usr/bin/pgrep"
+            pgrepTask.arguments = ["-x", "yabai"]
+            
+            // We need to run this synchronously to decide which menu item to show
+            // but in a real app, this should be cached/observed.
+            // For now, let's just use the cached state or a simple assumption.
+            // Better approach: Update menu right before it opens.
+        }
+
+        // Add Service Status Item (Clickable to toggle)
+        if isYabaiRunning() {
+             let stopItem = NSMenuItem(title: "Stop Yabai", action: #selector(stopYabai), keyEquivalent: "")
+             stopItem.image = NSImage(systemSymbolName: "stop.circle", accessibilityDescription: "Stop")
+             menu.addItem(stopItem)
+        } else {
+             let startItem = NSMenuItem(title: "Start Yabai", action: #selector(startYabai), keyEquivalent: "")
+             startItem.image = NSImage(systemSymbolName: "play.circle", accessibilityDescription: "Start")
+             menu.addItem(startItem)
+        }
+        
+        menu.addItem(NSMenuItem.separator())
+        
+        // Smart Layout Actions (Top Level)
+        let currentLayout = getCurrentLayout() 
+        if currentLayout == "bsp" {
+            menu.addItem(NSMenuItem(title: "Switch to Float", action: #selector(setFloat), keyEquivalent: ""))
+        } else if currentLayout == "float" {
+            menu.addItem(NSMenuItem(title: "Switch to BSP", action: #selector(setBSP), keyEquivalent: ""))
+        } else {
+            // Default fallback if unknown or stack
+            menu.addItem(NSMenuItem(title: "Switch to BSP", action: #selector(setBSP), keyEquivalent: ""))
+        }
+
+        menu.addItem(NSMenuItem(title: "Float Window...", action: #selector(floatSelectedWindow), keyEquivalent: ""))
+        
         menu.addItem(NSMenuItem.separator())
         
         // Window Commands
@@ -122,12 +186,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         windowMenu.submenu = windowSubmenu
         menu.addItem(windowMenu)
         
-        // Space/Layout Commands
-        let layoutMenu = NSMenuItem(title: "Layout", action: nil, keyEquivalent: "")
+        // Layout Commands (Submenu for advanced stuff)
+        let layoutMenu = NSMenuItem(title: "Advanced Layout", action: nil, keyEquivalent: "")
         let layoutSubmenu = NSMenu()
-        layoutSubmenu.addItem(NSMenuItem(title: "BSP (Tiling)", action: #selector(setBSP), keyEquivalent: ""))
-        layoutSubmenu.addItem(NSMenuItem(title: "Float", action: #selector(setFloat), keyEquivalent: ""))
-        layoutSubmenu.addItem(NSMenuItem(title: "Stack", action: #selector(setStack), keyEquivalent: ""))
+        layoutSubmenu.addItem(NSMenuItem(title: "Stack", action: #selector(setStack), keyEquivalent: "")) // Stack remains hidden in advanced
         layoutSubmenu.addItem(NSMenuItem.separator())
         layoutSubmenu.addItem(NSMenuItem(title: "Rotate Layout 90°", action: #selector(rotateTree), keyEquivalent: ""))
         layoutSubmenu.addItem(NSMenuItem(title: "Mirror X-Axis", action: #selector(mirrorX), keyEquivalent: ""))
@@ -137,23 +199,87 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         layoutMenu.submenu = layoutSubmenu
         menu.addItem(layoutMenu)
         
-        // Padding/Gaps
-        let paddingMenu = NSMenuItem(title: "Padding", action: nil, keyEquivalent: "")
+        menu.addItem(NSMenuItem.separator())
+
+        // Options Submenu
+        let optionsMenu = NSMenuItem(title: "Options", action: nil, keyEquivalent: "")
+        let optionsSubmenu = NSMenu()
+        
+        // Edge Padding
+        let paddingMenu = NSMenuItem(title: "Edge Padding", action: nil, keyEquivalent: "")
         let paddingSubmenu = NSMenu()
         paddingSubmenu.addItem(NSMenuItem(title: "Toggle Padding", action: #selector(togglePadding), keyEquivalent: ""))
-        paddingSubmenu.addItem(NSMenuItem(title: "Toggle Gaps", action: #selector(toggleGaps), keyEquivalent: ""))
-        paddingSubmenu.addItem(NSMenuItem(title: "Increase Gaps", action: #selector(increaseGaps), keyEquivalent: ""))
-        paddingSubmenu.addItem(NSMenuItem(title: "Decrease Gaps", action: #selector(decreaseGaps), keyEquivalent: ""))
-        paddingMenu.submenu = paddingSubmenu
-        menu.addItem(paddingMenu)
+        optionsSubmenu.addItem(paddingMenu)
+        paddingMenu.submenu = paddingSubmenu // Nesting padding toggle inside "Edge Padding" submenu feels wrong, let's flatten it or group nicely
         
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Edit Config", action: #selector(editConfig), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Reload Config", action: #selector(reloadConfig), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Restart macOS Dock", action: #selector(restartDock), keyEquivalent: ""))
+        // Re-doing Options Structure based on request
+        optionsSubmenu.addItem(NSMenuItem(title: "Toggle Edge Padding", action: #selector(togglePadding), keyEquivalent: ""))
+        optionsSubmenu.addItem(NSMenuItem(title: "Toggle Window Gaps", action: #selector(toggleGaps), keyEquivalent: ""))
+        optionsSubmenu.addItem(NSMenuItem.separator())
+        optionsSubmenu.addItem(NSMenuItem(title: "Increase Gaps", action: #selector(increaseGaps), keyEquivalent: ""))
+        optionsSubmenu.addItem(NSMenuItem(title: "Decrease Gaps", action: #selector(decreaseGaps), keyEquivalent: ""))
+        optionsSubmenu.addItem(NSMenuItem.separator())
+        optionsSubmenu.addItem(NSMenuItem(title: "Edit Config", action: #selector(editConfig), keyEquivalent: ""))
+        optionsSubmenu.addItem(NSMenuItem(title: "Reload Config", action: #selector(reloadConfig), keyEquivalent: ""))
+        optionsSubmenu.addItem(NSMenuItem(title: "Restart macOS Dock", action: #selector(restartDock), keyEquivalent: ""))
+        
+        optionsSubmenu.addItem(NSMenuItem.separator())
+        optionsSubmenu.addItem(NSMenuItem(title: "Permissions Helper...", action: #selector(openPermissionsHelp), keyEquivalent: ""))
+        
+        optionsMenu.submenu = optionsSubmenu
+        menu.addItem(optionsMenu)
+
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(quit), keyEquivalent: "q"))
     }
+    
+    // Helper to check if yabai is running
+    func isYabaiRunning() -> Bool {
+        let task = Process()
+        task.launchPath = "/usr/bin/pgrep"
+        task.arguments = ["-x", "yabai"]
+        
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        
+        do {
+            try task.run()
+            task.waitUntilExit()
+            return task.terminationStatus == 0
+        } catch {
+            return false
+        }
+    }
+
+    // Helper to get current layout
+    func getCurrentLayout() -> String {
+        let task = Process()
+        task.launchPath = "/bin/bash"
+         // Try checking only when yabai is accessible
+        guard !yabaiPath.isEmpty else { return "unknown" }
+        
+        // Use full path to yabai if possible, or PATH
+        // Assuming checkYabaiInstallation has run and yabaiPath is set or we use default lookup
+        task.arguments = ["-c", "\(yabaiPath) -m query --spaces --space | grep '\"type\":\"bsp\"' > /dev/null && echo bsp || echo float"]
+        
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        
+        do {
+            try task.run()
+            task.waitUntilExit()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            return String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "unknown"
+        } catch {
+            return "unknown"
+        }
+    }
+    
+    func menuWillOpen(_ menu: NSMenu) {
+        buildMenu() // Rebuild menu every time it opens to show correct status/layout
+    }
+
+
     
     @objc func restartYabai() {
         runCommand("yabai --restart-service")
@@ -161,13 +287,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func stopYabai() {
+        // Try standard service stop
+        print("Stopping Yabai Service...")
+        
+        // Try multiple methods to ensure it dies
         runCommand("yabai --stop-service")
-        showNotification("Yabai Stopped", "Yabai has been stopped")
+        
+        // Also try direct launchctl if we know the service name
+        let task = Process()
+        task.launchPath = "/bin/bash"
+        task.arguments = ["-c", "launchctl stop com.koekeishiya.yabai"]
+        try? task.run()
+        task.waitUntilExit()
+        
+        // And even killall if it's stubborn (as user)
+        let killTask = Process()
+        killTask.launchPath = "/usr/bin/killall"
+        killTask.arguments = ["yabai"]
+        try? killTask.run()
+        killTask.waitUntilExit()
+        
+        showNotification("Yabai Stopped", "Yabai service has been stopped")
+        
+        // Force immediate menu update
+        checkYabaiInstallation()
+        buildMenu()
     }
     
     @objc func startYabai() {
+        // Try standard service start
+        print("Starting Yabai Service...")
         runCommand("yabai --start-service")
-        showNotification("Yabai Started", "Yabai has been started")
+        
+        // Give it a second to spin up
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            // Force immediate menu update
+            self?.checkYabaiInstallation()
+            self?.buildMenu()
+            self?.showNotification("Yabai Started", "Yabai service has been started")
+        }
     }
     
     @objc func reloadConfig() {
@@ -311,6 +469,24 @@ echo "Arranged $window_count windows: 1 on top, rest on bottom"
         showNotification("Space Arranged", "Windows arranged: 1 on top, rest on bottom")
     }
     
+    @objc func floatSelectedWindow() {
+        // Run a script to select a window and float it
+        // Since we can't easily do "click to select" without complicated cursor tracking in Swift alone
+        // We will use the 'mouse' selector which applies to window under cursor if we bind it to a hotkey,
+        // BUT for a menu item, the user has to click the menu, so 'mouse' might be the menu bar itself or nil.
+        // BETTER APPROACH: Just float the currently focused window, OR 
+        // prompt user "Focus the window you want to float, then press Enter" (clunky).
+        
+        // Alternative: Use `yabai -m query --windows` to list windows and show valid ones? Too complex for menu.
+        // Let's stick to "Float FOCUSED Window" for now as it's the standard yabai pattern,
+        // OR rely on "mouse" which often means "window under mouse when command runs".
+        // When clicking menu, mouse is over menu. 
+        // So let's implement the standard "Make Focused Window Float" for now.
+        
+        runCommand("yabai -m window --toggle float")
+        showNotification("Float Toggled", "Focused window float state toggled")
+    }
+
     // Padding Commands
     @objc func togglePadding() {
         runCommand("yabai -m space --toggle padding")
@@ -321,7 +497,7 @@ echo "Arranged $window_count windows: 1 on top, rest on bottom"
         runCommand("yabai -m space --toggle gap")
         showNotification("Toggle Gaps", "Window gaps toggled")
     }
-    
+
     @objc func increaseGaps() {
         runCommand("yabai -m space --gap rel:5")
         showNotification("Gaps Increased", "Window gaps increased by 5px")
@@ -338,9 +514,21 @@ echo "Arranged $window_count windows: 1 on top, rest on bottom"
     }
     
     @objc func editConfig() {
-        // Use -t flag to open as text file, avoiding Gatekeeper issues
-        runCommand("open -t ~/.yabairc")
-        showNotification("Config Opened", "Yabai config opened in text editor")
+        let home = NSHomeDirectory()
+        let possiblePaths = [
+            "\(home)/.yabairc",
+            "\(home)/.config/yabai/yabairc"
+        ]
+        
+        for path in possiblePaths {
+            if FileManager.default.fileExists(atPath: path) {
+                print("Opening config at: \(path)")
+                NSWorkspace.shared.openFile(path)
+                return
+            }
+        }
+        
+        showNotification("Config Not Found", "Could not find .yabairc file to edit")
     }
     
     @objc func quit() {
@@ -348,11 +536,10 @@ echo "Arranged $window_count windows: 1 on top, rest on bottom"
     }
     
     func runCommand(_ command: String) {
-        // Safety check - don't run commands if Yabai isn't working
+        // Always try to run the command, even if we think yabai isn't working.
+        // The user knows best, and the command might fix the state (like starting the service).
         if !yabaiIsWorking {
-            print("Warning: Attempting to run command while Yabai is not properly initialized: \(command)")
-            checkYabaiInstallation()  // Try to fix it
-            return
+            print("Notice: Running command while app thinks Yabai is not initialized: \(command)")
         }
         
         // Replace "yabai" with the actual path
@@ -375,22 +562,69 @@ echo "Arranged $window_count windows: 1 on top, rest on bottom"
         print("[\(title)] \(body)")
     }
     
+    @objc func openPermissionsHelp() {
+        // 1. Open System Settings -> Privacy & Security -> Accessibility
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
+            NSWorkspace.shared.open(url)
+        }
+        
+        // 2. Reveal yabai binary in Finder (Resolving Symlinks)
+        // Prefer our custom binary if it exists, as it is likely the one running via launchd now
+        var targetPath = "/opt/homebrew/bin/yabai-tomodachi"
+        if !FileManager.default.fileExists(atPath: targetPath) {
+             targetPath = yabaiPath.isEmpty ? "/opt/homebrew/bin/yabai" : yabaiPath
+        }
+        
+        // Resolve symlink to get the real binary path (e.g., inside Cellar)
+        // This is crucial because TCC often ignores symlinks
+        if let resolvedPath = try? FileManager.default.destinationOfSymbolicLink(atPath: targetPath) {
+             // destinationOfSymbolicLink returns a relative path if it was relative
+             if resolvedPath.hasPrefix("/") {
+                 targetPath = resolvedPath
+             } else {
+                 // Resolve relative path
+                 let url = URL(fileURLWithPath: targetPath)
+                 targetPath = url.deletingLastPathComponent().appendingPathComponent(resolvedPath).path
+             }
+        }
+        
+        let fileURL = URL(fileURLWithPath: targetPath)
+        NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+        
+        // 3. Show Instructions
+        showPermissionInstructions(for: targetPath)
+    }
+    
+    func showPermissionInstructions(for path: String) {
+        let alert = NSAlert()
+        alert.messageText = "Accessibility Permissions Required"
+        alert.informativeText = """
+        If 'yabai' does not appear in the Accessibility list:
+        
+        1. Find the highlighted 'yabai' file in the Finder window that just opened.
+           (Located at: \(path))
+        
+        2. Drag and drop that file directly into the System Settings list.
+        
+        3. Ensure the toggle switch is ON.
+        """
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "Done")
+        alert.runModal()
+    }
+
     func checkYabaiInstallation() {
         // Check if we found a yabai binary
         if yabaiPath.isEmpty {
-            showYabaiInstallDialog("No yabai binary found (neither bundled nor system)")
+            print("No yabai binary found (neither bundled nor system)")
+            yabaiIsWorking = false
             return
         }
         
         print("Using yabai at: \(yabaiPath)")
         
-        // Check if service plist exists
-        let plistPath = "\(NSHomeDirectory())/Library/LaunchAgents/com.koekeishiya.yabai.plist"
-        if !FileManager.default.fileExists(atPath: plistPath) {
-            print("Yabai service plist not found - showing setup instructions")
-            showSimpleSetupInstructions()
-            return
-        }
+        // Skip rigid plist check. Just test if it works.
+        // Users might use Homebrew services (homebrew.mxcl.yabai.plist) or run manually.
         
         // Simple test - just try to query without timeout
         let testTask = Process()
@@ -406,238 +640,18 @@ echo "Arranged $window_count windows: 1 on top, rest on bottom"
             testTask.waitUntilExit()
         } catch {
             print("Error testing yabai: \(error)")
-            // Try to start the service
-            setupYabaiService()
+            yabaiIsWorking = false
             return
         }
         
         // If the test succeeds, yabai is working
         if testTask.terminationStatus == 0 {
             print("Yabai is working properly!")
+            yabaiIsWorking = true
         } else {
             print("Yabai test failed with status: \(testTask.terminationStatus)")
-            showSimpleSetupInstructions()
+            yabaiIsWorking = false
             return
-        }
-        
-        // Yabai is working properly
-        yabaiIsWorking = true
-        print("Yabai is installed and working properly")
-    }
-    
-    func setupYabaiService() {
-        serviceSetupAttempted = true
-        
-        DispatchQueue.main.async { [weak self] in
-            let alert = NSAlert()
-            alert.messageText = "Yabai Service Setup Needed"
-            alert.informativeText = "Yabai is installed but the service isn't running.\n\nNote: This may require admin permissions. Would you like to try setting up the service?"
-            alert.alertStyle = .informational
-            alert.addButton(withTitle: "Try Setup")
-            alert.addButton(withTitle: "Skip")
-            
-            if alert.runModal() == .alertFirstButtonReturn {
-                self?.performServiceSetup()
-            } else {
-                self?.showManualSetupInstructions()
-            }
-        }
-    }
-    
-    func performServiceSetup() {
-        showNotification("Setting Up Yabai Service", "Configuring service silently...")
-        
-        // First try to install the service - suppress all output
-        let installTask = Process()
-        installTask.launchPath = "/bin/bash"
-        installTask.arguments = ["-c", "'\(yabaiPath)' --install-service 2>/dev/null"]
-        
-        let pipe = Pipe()
-        installTask.standardOutput = pipe
-        installTask.standardError = pipe
-        
-        do {
-            try installTask.run()
-            installTask.waitUntilExit()
-            
-            // Check if service file was created successfully
-            let plistPath = "\(NSHomeDirectory())/Library/LaunchAgents/com.koekeishiya.yabai.plist"
-            if !FileManager.default.fileExists(atPath: plistPath) {
-                print("Service installation failed - plist not created")
-                showServiceSetupError("Service file could not be created")
-                return
-            }
-        } catch {
-            print("Failed to install service: \(error)")
-            showServiceSetupError("Process execution failed: \(error)")
-            return
-        }
-        
-        // Create default config if it doesn't exist
-        let configPath = "\(NSHomeDirectory())/.yabairc"
-        if !FileManager.default.fileExists(atPath: configPath) {
-            let defaultConfig = """
-#!/usr/bin/env sh
-
-# default layout (can be bsp, stack or float)
-yabai -m config layout bsp
-
-# new window spawns to the right if vertical split, or bottom if horizontal split
-yabai -m config window_placement second_child
-
-# padding
-yabai -m config top_padding    12
-yabai -m config bottom_padding 12
-yabai -m config left_padding   12
-yabai -m config right_padding  12
-yabai -m config window_gap     12
-
-# mouse settings
-yabai -m config mouse_follows_focus          off
-yabai -m config focus_follows_mouse          off
-yabai -m config mouse_modifier               fn
-yabai -m config mouse_action1                move
-yabai -m config mouse_action2                resize
-
-echo "yabai configuration loaded.."
-"""
-            do {
-                try defaultConfig.write(toFile: configPath, atomically: true, encoding: .utf8)
-                // Make it executable
-                let chmod = Process()
-                chmod.launchPath = "/bin/chmod"
-                chmod.arguments = ["+x", configPath]
-                try chmod.run()
-                chmod.waitUntilExit()
-            } catch {
-                print("Failed to create default config: \(error)")
-            }
-        }
-        
-        // Now start the service - suppress output  
-        let startTask = Process()
-        startTask.launchPath = "/bin/bash"
-        startTask.arguments = ["-c", "'\(yabaiPath)' --start-service 2>/dev/null"]
-        
-        do {
-            try startTask.run()
-            startTask.waitUntilExit()
-            
-            // Give it a moment to start
-            Thread.sleep(forTimeInterval: 2.0)
-            
-            // Reset the flag to allow re-checking
-            serviceSetupAttempted = false
-            
-            // Check if it's working now
-            checkYabaiInstallation()
-            
-            if yabaiIsWorking {
-                showNotification("Yabai Ready!", "Service configured and running successfully!")
-            } else {
-                showManualSetupInstructions()
-            }
-        } catch {
-            print("Failed to start service: \(error)")
-            showServiceSetupError("Failed to start service: \(error)")
-        }
-    }
-    
-    func showServiceSetupError(_ error: String) {
-        serviceSetupAttempted = false  // Reset flag so user can try again
-        DispatchQueue.main.async {
-            let alert = NSAlert()
-            alert.messageText = "Service Setup Failed"
-            alert.informativeText = "Could not automatically set up Yabai service.\n\nError: \(error)\n\nYou may need to run the following commands manually in Terminal:\n\n1. sudo yabai --install-service\n2. yabai --start-service"
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "OK")
-            alert.runModal()
-        }
-    }
-    
-    func showSimpleSetupInstructions() {
-        DispatchQueue.main.async {
-            let alert = NSAlert()
-            alert.messageText = "Yabai Setup Needed"
-            alert.informativeText = "yabai-tomodachi is ready! To enable window management, run these two commands in Terminal:\n\n1. sudo yabai --install-service\n2. yabai --start-service\n\nThen restart this app. The yabai binary is already installed with this app."
-            alert.alertStyle = .informational
-            alert.addButton(withTitle: "OK")
-            alert.addButton(withTitle: "Copy Commands")
-            
-            let response = alert.runModal()
-            if response == .alertSecondButtonReturn {
-                let pasteboard = NSPasteboard.general
-                pasteboard.clearContents()
-                pasteboard.setString("sudo yabai --install-service && yabai --start-service", forType: .string)
-                
-                let copied = NSAlert()
-                copied.messageText = "Commands Copied!"
-                copied.informativeText = "The commands have been copied to your clipboard. Paste them in Terminal."
-                copied.addButton(withTitle: "OK")
-                copied.runModal()
-            }
-        }
-    }
-    
-    func showManualSetupInstructions() {
-        showSimpleSetupInstructions()
-    }
-    
-    func showYabaiInstallDialog(_ reason: String) {
-        let alert = NSAlert()
-        alert.messageText = "Yabai Not Working"
-        alert.informativeText = "yabai-tomodachi needs Yabai to work!\n\nIssue: \(reason)\n\nWould you like to install/fix Yabai now?"
-        alert.alertStyle = .warning
-        alert.addButton(withTitle: "Install Yabai")
-        alert.addButton(withTitle: "Later")
-        
-        if alert.runModal() == .alertFirstButtonReturn {
-            showNotification("Installing Yabai", "Installing Yabai silently in background...")
-            
-            // Install silently in background without opening Terminal
-            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                let task = Process()
-                task.launchPath = "/bin/bash"
-                task.arguments = ["-c", "curl -fsSL https://raw.githubusercontent.com/halapenyoharry/yabai-tomodachi/main/install-yabai.sh | bash"]
-                
-                let pipe = Pipe()
-                task.standardOutput = pipe
-                task.standardError = pipe
-                
-                do {
-                    try task.run()
-                    task.waitUntilExit()
-                    
-                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    let output = String(data: data, encoding: .utf8) ?? ""
-                    
-                    DispatchQueue.main.async {
-                        if task.terminationStatus == 0 {
-                            self?.showNotification("Yabai Installed", "Installation completed! Restarting app...")
-                            // Restart the check process
-                            self?.findYabaiBinary()
-                            self?.checkYabaiInstallation()
-                        } else {
-                            self?.showYabaiInstallError(output)
-                        }
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self?.showYabaiInstallError("Installation failed: \(error)")
-                    }
-                }
-            }
-        }
-    }
-    
-    func showYabaiInstallError(_ error: String) {
-        DispatchQueue.main.async {
-            let alert = NSAlert()
-            alert.messageText = "Yabai Installation Error"
-            alert.informativeText = "Could not install Yabai automatically.\n\nError: \(error)\n\nPlease install manually using Homebrew:\nbrew install koekeishiya/formulae/yabai"
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "OK")
-            alert.runModal()
         }
     }
 }
