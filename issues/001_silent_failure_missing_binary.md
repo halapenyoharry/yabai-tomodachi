@@ -1,9 +1,10 @@
 # Issue: Silent Failure when Starting Yabai without Installation
 
-**Status:** Open  
-**Priority:** High  
-**Branch:** `recovery/jules-update-v1.5`  
+**Status:** Fixed
+**Priority:** High
+**Branch:** `main`
 **Created:** Jan 31, 2026
+**Resolved:** Mar 12, 2026
 
 ## Description
 When the application is launched on a system where `yabai` is not installed (and thus not found by `findYabaiBinary()`), the "Start Yabai" menu item is still active. Clicking it results in a silent failure with a false positive success notification.

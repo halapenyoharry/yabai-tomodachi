@@ -3,7 +3,7 @@ set -e
 
 APP_NAME="Yabai-Tomodachi-Test"
 VERSION="1.5.0"
-IDENTIFIER="com.harrysgraph.yabaitorodachi.test"
+IDENTIFIER="com.halapenyoharry.yabai-tomodachi.test"
 
 echo "Building Test App: ${APP_NAME}.app..."
 

@@ -73,7 +73,7 @@ git clone https://github.com/halapenyoharry/yabai-tomodachi.git
 cd yabai-tomodachi
 
 # Compile menu bar app
-swiftc src/YabaiRestarter.swift -o yabai-tomodachi
+swiftc YabaiTomodachi.swift -o yabai-tomodachi
 ./yabai-tomodachi
 ```
 

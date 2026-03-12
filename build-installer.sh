@@ -6,7 +6,7 @@
 set -e  # Exit on any error
 
 VERSION="1.5.0"
-IDENTIFIER="com.harrysgraph.yabaitorodachi"
+IDENTIFIER="com.halapenyoharry.yabai-tomodachi"
 APP_NAME="Yabai-Tomodachi"
 
 echo "🌊 Building ${APP_NAME} v${VERSION} Installer..."
