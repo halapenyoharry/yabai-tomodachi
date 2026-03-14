@@ -1,198 +1,119 @@
 # yabai-tomodachi
-<p align="center">Your friendly companion app for the incredibly powerful <a href="https://github.com/koekeishiya/yabai">yabai</a> window manager, and an innovative connector for the power of MCP protocol and yabai</p>
+
+<p align="center">Window tiling for everyone on macOS.</p>
 
 <p align="center">
   <img src="assets/installer-welcome-message.rtfd/icon_128x128.png" width="256" height="256" alt="yabai-tomodachi icon">
 </p>
 
-
-
-## 🙏 A Tribute to koekeishiya's yabai
-
-The [yabai](https://github.com/koekeishiya/yabai) window manager is a masterpiece of software engineering that transforms macOS window management. Its creator, koekeishiya, deserves the highest praise for building a tool that reduces cognitive overhead by 20-30% when multitasking on macOS. If there were a Nobel Prize for macOS applications, yabai would win it for all time.
-
-yabai-tomodachi exists to make this incredible power more accessible and friendly.
-
-## 🎯 What is yabai-tomodachi?
-
-A companion app that helps you get the most out of [yabai](https://github.com/koekeishiya/yabai). Think of it as your friendly guide to window management mastery.
-
-**Currently Includes:**
-
-**🖱️ Menu Bar App**
-- Instant access to essential [yabai](https://github.com/koekeishiya/yabai) commands
-- Restart yabai when it gets stuck (the #1 user request!)
-- Quick layout switching without memorizing commands
-- Visual access to window controls
-
-**🤖 AI Integration (MCP Server)**
-- Natural language window management through Claude
-- Query and control windows programmatically
-- Build automated workspace workflows
-- Future-proof your window management
-
-**Coming Soon:**
-- Keyboard shortcut manager
-- Visual layout designer
-- Workspace presets
-- And more based on community feedback!
-
-## 🚀 Features
-
-**Essential Controls at Your Fingertips:**
-- **Service Management:** Restart, stop, or start [yabai](https://github.com/koekeishiya/yabai) instantly
-- **Window Controls:** Balance, float, fullscreen, split, and center windows
-- **Layout Switching:** Toggle between BSP (tiling), float, and stack modes
-- **Space Management:** Rotate layouts, mirror axes, adjust padding and gaps
-- **Quick Actions:** Edit [yabai](https://github.com/koekeishiya/yabai/wiki/Configuration#configuration-file) config, reload settings, even restart the Dock
-
-**AI-Powered Automation:**
-- Tell Claude what you want: "Set up my coding workspace"
-- Query window information programmatically
-- Create complex window arrangements with simple commands
-- Build context-aware workspace automation
-
-## 🛠 Installation
-
-### Prerequisites
-- macOS 10.14+
-- [yabai](https://github.com/koekeishiya/yabai) window manager
-- Node.js 16+ (only for MCP server)
-
-### Quick Install
-
-**Option 1: Download Package (Easiest)**
-
-Download `yabai-tomodachi-installer.pkg` from this repository and run it.
-
-**Option 2: Build from Source**
-
-```bash
-# Clone and build
-git clone https://github.com/halapenyoharry/yabai-tomodachi.git
-cd yabai-tomodachi
-
-# Compile menu bar app
-swiftc YabaiTomodachi.swift -o yabai-tomodachi
-./yabai-tomodachi
-```
-
-### Installing yabai (if needed)
-
-```bash
-brew install koekeishiya/formulae/yabai
-yabai --start-service
-```
-
-For detailed [yabai](https://github.com/koekeishiya/yabai) setup, see the [official wiki](https://github.com/koekeishiya/yabai/wiki).
-
-### MCP Server Setup (for Claude integration)
-
-1. **Build the MCP server** (in the yabai-tomodachi folder):
-```bash
-npm install
-npm run build
-```
-
-2. **Find your Claude Desktop config file**:
-   - Open Finder
-   - Press `Cmd+Shift+G` and paste: `~/Library/Application Support/Claude/`
-   - Open the file `claude_desktop_config.json`
-
-3. **Add yabai-tomodachi to your config**:
-   - Look for the `"mcpServers": {` section
-   - Add a comma after the last server entry
-   - Add these lines before the closing `}` of mcpServers:
-
-```json
-    "yabai-tomodachi": {
-      "command": "node",
-      "args": [
-        "/absolute/path/to/yabai-tomodachi/dist/index.js"
-      ]
-    }
-```
-
-**Important**: Replace `/absolute/path/to/yabai-tomodachi` with your actual path, like:
-- If you cloned to Projects: `/Users/harold/Projects/yabai-tomodachi/dist/index.js`
-- If you put it in mcp-servers: `/Users/harold/mcp-servers/yabai-tomodachi/dist/index.js`
-
-4. **Save the file** and restart Claude Desktop for changes to take effect.
-
-## 💡 Usage Examples
-
-**Menu Bar App**
-
-Click the menu bar icon to:
-- Quickly restart [yabai](https://github.com/koekeishiya/yabai) when windows get stuck
-- Switch layouts on the fly
-- Balance window sizes
-- Adjust gaps and padding
-
-**Claude Integration**
-
-Tell Claude things like:
-- "Set up my workspace for React development"
-- "Move all browsers to space 2"
-- "Make the current window float"
-- "Balance all windows on this space"
-- "Create a new space for documentation"
-
-## 🎨 The Vision
-
-Imagine AI that understands your workspace:
-- Automatically arranges windows based on your current task
-- Moves documentation to one screen, code to another
-- Hides distracting apps when you need to focus
-- Saves and restores project-specific layouts
-- Responds to natural language workspace requests
-
-## 📝 MCP Tools Available
-
-The MCP server provides 12 tools:
-
-**Query Operations**
-- `query_spaces` - Get information about all spaces
-- `query_windows` - Query windows with filters
-- `query_displays` - Get display information
-
-**Window Management**
-- `focus_window` - Focus by direction or ID
-- `move_window_to_space` - Move windows between spaces
-- `resize_window` - Resize by pixels
-- `toggle_window_property` - Toggle float, sticky, etc.
-
-**Space Management**
-- `create_space` - Create new spaces
-- `destroy_space` - Remove spaces
-- `label_space` - Name your spaces
-- `set_space_layout` - Change layout modes
-- `focus_space` - Switch to specific spaces
-
-## 🤝 Contributing
-
-Contributions are welcome! This project aims to enhance the [yabai](https://github.com/koekeishiya/yabai) experience while respecting its design philosophy.
-
-## 📄 License
-
-MIT License - Same as [yabai](https://github.com/koekeishiya/yabai), because we believe in the same principles of open software.
-
-## 🔗 Other yabai Tools
-
-Explore the rich ecosystem of [yabai](https://github.com/koekeishiya/yabai) companion tools:
-
-- **[skhd](https://github.com/koekeishiya/skhd)** - Simple hotkey daemon for macOS (by koekeishiya)
-- **[Stackline](https://github.com/AdamWagner/stackline)** - Visual stack indicators for yabai
-- **[Spacebar](https://github.com/cmacrae/spacebar)** - Minimal status bar for yabai
-- **[YabaiIndicator](https://github.com/xiamaz/YabaiIndicator)** - Simple space indicator for the menu bar
-- **[Nero](https://github.com/theurgetosurge/Nero)** - Another yabai companion with focus on simplicity
-
-## 🙏 Acknowledgments
-
-- **[koekeishiya](https://github.com/koekeishiya)** - Creator of [yabai](https://github.com/koekeishiya/yabai), the foundation this project builds upon
-- The [yabai community](https://github.com/koekeishiya/yabai/discussions) for continuous inspiration
-- Anthropic for the MCP protocol that enables AI integration
+<p align="center">
+  A friendly menu bar companion that brings the power of <a href="https://github.com/koekeishiya/yabai">yabai</a> tiling to anyone — no terminal required.
+</p>
 
 ---
 
-*Tomodachi (友達) means "friend" in Japanese. This project aims to be a helpful friend to both [yabai](https://github.com/koekeishiya/yabai) and its users.*
+## What is this?
+
+macOS doesn't have real window tiling. Pop!_OS has it. Windows has it. Mac users get... drag to edges.
+
+[yabai](https://github.com/koekeishiya/yabai) fixes this — it's the most powerful tiling window manager for macOS. But it's a command-line tool, and most people shouldn't need a terminal to tile their windows.
+
+**Yabai Tomodachi bridges that gap.** It's a menu bar app that gives you point-and-click access to yabai's best features:
+
+- **Tiling / Floating** layout toggle with live status
+- **Float individual windows** in and out of tiling (with status indicator)
+- **Toggle window splits**, adjust **padding** and **gaps**
+- **Quick Controls panel** for real-time spacing adjustments
+- Advanced options: rotate layouts, mirror axes, stack mode, and more
+
+## Install
+
+**Download the latest [DMG from Releases](https://github.com/halapenyoharry/yabai-tomodachi/releases).**
+
+1. Open the DMG
+2. Drag `Yabai-Tomodachi.app` to Applications
+3. If you need yabai, double-click `Install Yabai.command` in the DMG
+4. Launch the app — it appears in your menu bar
+5. If macOS blocks it: System Settings > Privacy & Security > "Open Anyway"
+
+### Requirements
+
+- macOS 12.0+ (Monterey or later)
+- [yabai](https://github.com/koekeishiya/yabai) (installed via Homebrew — the DMG includes a helper)
+
+### Build from source
+
+```bash
+git clone https://github.com/halapenyoharry/yabai-tomodachi.git
+cd yabai-tomodachi
+bash build-dmg.sh        # builds the full DMG
+# or for quick dev builds:
+bash build-test-app.sh   # builds just the app bundle
+```
+
+## AI Integration (MCP Server)
+
+Yabai Tomodachi includes an MCP server that lets Claude control your windows through natural language.
+
+```bash
+npm install && npm run build
+```
+
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "yabai-tomodachi": {
+      "command": "node",
+      "args": ["/path/to/yabai-tomodachi/dist/index.js"]
+    }
+  }
+}
+```
+
+Then ask Claude things like:
+- "Set up my coding workspace"
+- "Float this window and center it"
+- "Move all browsers to space 2"
+- "Balance all my windows"
+
+### MCP Tools
+
+**Query:** `query_spaces`, `query_windows`, `query_displays`
+**Windows:** `focus_window`, `move_window_to_space`, `resize_window`, `toggle_window_property`
+**Spaces:** `create_space`, `destroy_space`, `label_space`, `set_space_layout`, `focus_space`
+
+## A tribute to yabai
+
+[yabai](https://github.com/koekeishiya/yabai) by [koekeishiya](https://github.com/koekeishiya) is a masterpiece. It transforms macOS into something it should have been all along — a proper tiling window manager that respects how people actually work. The engineering behind yabai is extraordinary: a single developer building and maintaining what Apple hasn't in over 20 years of macOS.
+
+Yabai Tomodachi exists because yabai deserves a wider audience. The power shouldn't be limited to people comfortable with dotfiles and shell commands. Every Mac user who's ever wrestled with overlapping windows deserves to experience what tiling feels like.
+
+## For contributors and developers
+
+This project has ambitious long-term goals. Today we're a companion app. Tomorrow we want to be **the** way people experience tiling on macOS.
+
+The roadmap includes:
+- **Native tiling engine** — building our own window management layer, potentially combining Apple's built-in tiling APIs (macOS Sequoia+) with the deep control that yabai pioneered
+- **Visual layout designer** — drag-and-drop workspace layouts
+- **Keyboard shortcut manager** — built-in hotkey configuration without needing skhd
+- **Workspace presets** — save and restore window arrangements per project
+- **First-launch onboarding** — zero-config tiling for people who've never heard of a window manager
+
+We're building on the shoulders of a giant. If you're interested in macOS window management, Accessibility APIs, or making power tools accessible — we'd love your help.
+
+## Ecosystem
+
+- **[yabai](https://github.com/koekeishiya/yabai)** — the tiling window manager this all builds on
+- **[skhd](https://github.com/koekeishiya/skhd)** — hotkey daemon by koekeishiya
+- **[Stackline](https://github.com/AdamWagner/stackline)** — visual stack indicators
+- **[YabaiIndicator](https://github.com/xiamaz/YabaiIndicator)** — menu bar space indicator
+
+## License
+
+MIT — same as yabai.
+
+---
+
+*Tomodachi (友達) means "friend" in Japanese. This project aims to be a helpful friend to both yabai and its users.*

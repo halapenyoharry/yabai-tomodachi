@@ -1,12 +1,25 @@
 # Todo List
 
-- [ ] Replace Restart with Start/Stop Toggle
+- [x] Replace Restart with Start/Stop Toggle
   - Replace 'Restart Yabai' with dynamic 'Start Yabai'/'Stop Yabai' menu item based on current service status.
-- [ ] Smart Layout Quick Actions
-  - 1. Check global layout: if BSP, show 'Switch to Float'; if Float, show 'Switch to BSP' (top level, no submodule). 2. Add 'Float Window' action that triggers a window selection mode.
+- [x] Smart Layout Quick Actions
+  - Layout section with Tiling/Floating radio-style selection with checkmarks. Float Window tool with live status indicator.
 - [x] Verify Padding/Gaps Terminology
   - Research Yabai documentation to confirm if 'padding' and 'gaps' are standard terms. If so, keep; if not, standardize.
-- [ ] Fix Edit Config & Group Options
-  - Debug 'Edit Config' button - ensure it opens the correct config file in the default editor. Move 'Edit Config' and other settings into an 'Options' submenu.
-- [ ] Complete Menu Redesign
-  - Redesign the entire menu structure/order based on yet-to-be-provided design. (Dependent on previous issues).
+- [x] Fix Edit Config & Group Options
+  - Edit Config and settings moved into 'More' submenu. Padding/Gaps controls promoted to top-level Tools section.
+- [x] Complete Menu Redesign
+  - New menu structure: Start/Stop > Layout (Tiling/Floating) > Tools (Split, Float, Padding, Gaps) > More submenu > Controls/Quit.
+- [x] Fix Controls Panel
+  - Removed broken NSBox "Title" text and orphan Balance button. Clean Padding/Gaps only.
+- [x] DMG Distribution
+  - Ad-hoc signed app bundle, README.txt, Install Yabai.command helper.
+
+## Future
+
+- [ ] First-launch onboarding (detect missing yabai, guide install from within the app)
+- [ ] Homebrew tap formula
+- [ ] Visual layout designer
+- [ ] Keyboard shortcut manager (replace skhd dependency)
+- [ ] Workspace presets (save/restore layouts per project)
+- [ ] Native tiling engine exploration

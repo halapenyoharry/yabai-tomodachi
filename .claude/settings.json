@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(defaults read:*)"
+      "Bash(defaults read:*)",
+      "Bash(ls /Users/harold/Projects/yabai-tomodachi/src/*.swift)",
+      "Bash(bash build-test-app.sh)",
+      "Bash(open /Users/harold/Projects/yabai-tomodachi/Yabai-Tomodachi-Test.app)",
+      "Bash(killall Yabai-Tomodachi)",
+      "Bash(bash /Users/harold/Projects/yabai-tomodachi/build-test-app.sh)",
+      "WebSearch",
+      "Bash(git -C /Users/harold/Projects/yabai-tomodachi remote -v)"
     ]
   }
 }

@@ -129,6 +129,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func buildMenu() {
         menu.removeAllItems()
 
+        // --- Start / Stop ---
         if isYabaiRunning() {
             let stopItem = NSMenuItem(title: "Stop Yabai", action: #selector(stopYabai), keyEquivalent: "")
             stopItem.image = NSImage(systemSymbolName: "stop.circle", accessibilityDescription: "Stop")
@@ -141,32 +142,75 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         menu.addItem(NSMenuItem.separator())
 
-        let currentLayout = getCurrentLayout()
-        if currentLayout == "bsp" {
-            menu.addItem(NSMenuItem(title: "Switch to Float", action: #selector(setFloat), keyEquivalent: ""))
-        } else if currentLayout == "float" {
-            menu.addItem(NSMenuItem(title: "Switch to BSP", action: #selector(setBSP), keyEquivalent: ""))
-        } else {
-            menu.addItem(NSMenuItem(title: "Switch to BSP", action: #selector(setBSP), keyEquivalent: ""))
-        }
+        // --- Layout section ---
+        let layoutHeader = NSMenuItem(title: "Layout", action: nil, keyEquivalent: "")
+        layoutHeader.isEnabled = false
+        menu.addItem(layoutHeader)
 
-        menu.addItem(NSMenuItem(title: "Float Window...", action: #selector(floatSelectedWindow), keyEquivalent: ""))
+        let currentLayout = getCurrentLayout()
+
+        let tilingItem = NSMenuItem(title: "Tiling", action: #selector(setBSP), keyEquivalent: "")
+        tilingItem.state = (currentLayout == "bsp") ? .on : .off
+        tilingItem.indentationLevel = 1
+        menu.addItem(tilingItem)
+
+        let floatingItem = NSMenuItem(title: "Floating", action: #selector(setFloat), keyEquivalent: "")
+        floatingItem.state = (currentLayout == "float") ? .on : .off
+        floatingItem.indentationLevel = 1
+        menu.addItem(floatingItem)
 
         menu.addItem(NSMenuItem.separator())
 
+        // --- Tools section ---
+        let toolsHeader = NSMenuItem(title: "Tools", action: nil, keyEquivalent: "")
+        toolsHeader.isEnabled = false
+        menu.addItem(toolsHeader)
+
+        let splitItem = NSMenuItem(title: "Toggle Window Split", action: #selector(toggleSplit), keyEquivalent: "")
+        splitItem.indentationLevel = 1
+        menu.addItem(splitItem)
+
+        let floatWindowItem = NSMenuItem(title: "Float Window", action: #selector(floatSelectedWindow), keyEquivalent: "")
+        floatWindowItem.state = isFocusedWindowFloating() ? .on : .off
+        floatWindowItem.indentationLevel = 1
+        menu.addItem(floatWindowItem)
+
+        let padPlusItem = NSMenuItem(title: "Padding +", action: #selector(increasePadding), keyEquivalent: "")
+        padPlusItem.indentationLevel = 1
+        menu.addItem(padPlusItem)
+
+        let padMinusItem = NSMenuItem(title: "Padding -", action: #selector(decreasePadding), keyEquivalent: "")
+        padMinusItem.indentationLevel = 1
+        menu.addItem(padMinusItem)
+
+        let gapPlusItem = NSMenuItem(title: "Gaps +", action: #selector(increaseGaps), keyEquivalent: "")
+        gapPlusItem.indentationLevel = 1
+        menu.addItem(gapPlusItem)
+
+        let gapMinusItem = NSMenuItem(title: "Gaps -", action: #selector(decreaseGaps), keyEquivalent: "")
+        gapMinusItem.indentationLevel = 1
+        menu.addItem(gapMinusItem)
+
+        menu.addItem(NSMenuItem.separator())
+
+        // --- More submenu (everything else) ---
+        let moreMenu = NSMenuItem(title: "More", action: nil, keyEquivalent: "")
+        let moreSubmenu = NSMenu()
+
+        // Window actions
         let windowMenu = NSMenuItem(title: "Window", action: nil, keyEquivalent: "")
         let windowSubmenu = NSMenu()
         windowSubmenu.addItem(NSMenuItem(title: "Balance Windows", action: #selector(balanceWindows), keyEquivalent: ""))
         windowSubmenu.addItem(NSMenuItem(title: "Toggle Float", action: #selector(toggleFloat), keyEquivalent: ""))
-        windowSubmenu.addItem(NSMenuItem(title: "Toggle Split", action: #selector(toggleSplit), keyEquivalent: ""))
         let toggleMaxItem = NSMenuItem(title: "Toggle Maximize", action: #selector(toggleMaximize), keyEquivalent: "f")
         toggleMaxItem.keyEquivalentModifierMask = [.command, .option]
         windowSubmenu.addItem(toggleMaxItem)
         windowSubmenu.addItem(NSMenuItem(title: "Toggle Native Fullscreen", action: #selector(toggleFullscreen), keyEquivalent: ""))
         windowSubmenu.addItem(NSMenuItem(title: "Center Window", action: #selector(centerWindow), keyEquivalent: ""))
         windowMenu.submenu = windowSubmenu
-        menu.addItem(windowMenu)
+        moreSubmenu.addItem(windowMenu)
 
+        // Advanced Layout
         let layoutMenu = NSMenuItem(title: "Advanced Layout", action: nil, keyEquivalent: "")
         let layoutSubmenu = NSMenu()
         layoutSubmenu.addItem(NSMenuItem(title: "Stack", action: #selector(setStack), keyEquivalent: ""))
@@ -177,25 +221,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         layoutSubmenu.addItem(NSMenuItem.separator())
         layoutSubmenu.addItem(NSMenuItem(title: "Arrange Space (1 Top, Rest Bottom)", action: #selector(arrangeSpace), keyEquivalent: ""))
         layoutMenu.submenu = layoutSubmenu
-        menu.addItem(layoutMenu)
+        moreSubmenu.addItem(layoutMenu)
 
-        menu.addItem(NSMenuItem.separator())
+        moreSubmenu.addItem(NSMenuItem.separator())
+        moreSubmenu.addItem(NSMenuItem(title: "Edit Config", action: #selector(editConfig), keyEquivalent: ""))
+        moreSubmenu.addItem(NSMenuItem(title: "Reload Config", action: #selector(reloadConfig), keyEquivalent: ""))
+        moreSubmenu.addItem(NSMenuItem(title: "Restart macOS Dock", action: #selector(restartDock), keyEquivalent: ""))
+        moreSubmenu.addItem(NSMenuItem.separator())
+        moreSubmenu.addItem(NSMenuItem(title: "Permissions Helper...", action: #selector(openPermissionsHelp), keyEquivalent: ""))
 
-        let optionsMenu = NSMenuItem(title: "Options", action: nil, keyEquivalent: "")
-        let optionsSubmenu = NSMenu()
-        optionsSubmenu.addItem(NSMenuItem(title: "Padding +", action: #selector(increasePadding), keyEquivalent: ""))
-        optionsSubmenu.addItem(NSMenuItem(title: "Padding -", action: #selector(decreasePadding), keyEquivalent: ""))
-        optionsSubmenu.addItem(NSMenuItem.separator())
-        optionsSubmenu.addItem(NSMenuItem(title: "Gaps +", action: #selector(increaseGaps), keyEquivalent: ""))
-        optionsSubmenu.addItem(NSMenuItem(title: "Gaps -", action: #selector(decreaseGaps), keyEquivalent: ""))
-        optionsSubmenu.addItem(NSMenuItem.separator())
-        optionsSubmenu.addItem(NSMenuItem(title: "Edit Config", action: #selector(editConfig), keyEquivalent: ""))
-        optionsSubmenu.addItem(NSMenuItem(title: "Reload Config", action: #selector(reloadConfig), keyEquivalent: ""))
-        optionsSubmenu.addItem(NSMenuItem(title: "Restart macOS Dock", action: #selector(restartDock), keyEquivalent: ""))
-        optionsSubmenu.addItem(NSMenuItem.separator())
-        optionsSubmenu.addItem(NSMenuItem(title: "Permissions Helper...", action: #selector(openPermissionsHelp), keyEquivalent: ""))
-        optionsMenu.submenu = optionsSubmenu
-        menu.addItem(optionsMenu)
+        moreMenu.submenu = moreSubmenu
+        menu.addItem(moreMenu)
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Show Controls...", action: #selector(toggleControlWindow), keyEquivalent: "k"))
@@ -205,7 +241,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func toggleControlWindow() {
         if controlWindow == nil {
             let window = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: 200, height: 120),
+                contentRect: NSRect(x: 0, y: 0, width: 200, height: 80),
                 styleMask: [.titled, .closable, .utilityWindow, .hudWindow],
                 backing: .buffered,
                 defer: false
@@ -249,18 +285,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             gapsRow.addArrangedSubview(gMinus)
             gapsRow.addArrangedSubview(gPlus)
 
-            let miscRow = NSStackView()
-            miscRow.orientation = .horizontal
-            let balanceBtn = NSButton(title: "Balance", target: self, action: #selector(balanceWindows))
-            balanceBtn.bezelStyle = .rounded
-            miscRow.addArrangedSubview(balanceBtn)
-
             stack.addArrangedSubview(paddingRow)
             stack.addArrangedSubview(gapsRow)
-            stack.addArrangedSubview(NSBox())
-            stack.addArrangedSubview(miscRow)
 
-            [paddingRow, gapsRow, miscRow].forEach {
+            [paddingRow, gapsRow].forEach {
                 $0.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
                 $0.distribution = .fillProportionally
             }
@@ -287,6 +315,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         } catch {
             return false
         }
+    }
+
+    func isFocusedWindowFloating() -> Bool {
+        guard !yabaiPath.isEmpty else { return false }
+        guard let output = runCommandAndCapture("yabai -m query --windows --window") else { return false }
+        return output.contains("\"is-floating\":true")
     }
 
     func getCurrentLayout() -> String {
