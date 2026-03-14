@@ -6,6 +6,8 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { execAsync } from "./utils.js";
+import { macosToolDefinitions } from "./macos-tools.js";
+import { handleMacosTool } from "./macos-handlers.js";
 
 const server = new Server(
   {
@@ -251,6 +253,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["layout"],
         },
       },
+      ...macosToolDefinitions,
     ],
   };
 });
@@ -259,6 +262,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args = {} } = request.params;
 
   try {
+    // Check macOS native tools first
+    if (name.startsWith("macos_")) {
+      const result = await handleMacosTool(name, args as Record<string, unknown>);
+      if (result) {
+        return {
+          content: [{ type: "text", text: result.text }],
+        };
+      }
+      throw new Error(`Unknown macOS tool: ${name}`);
+    }
+
     switch (name) {
       case "yabai_query_spaces": {
         const output = await execAsync("yabai -m query --spaces");
