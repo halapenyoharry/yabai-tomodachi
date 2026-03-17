@@ -1,36 +1,36 @@
 # Agent Context & Handover Notes
 
-**Last Updated:** Jan 31, 2026
-**Current Branch:** `recovery/jules-update-v1.5`
+**Last Updated:** Mar 17, 2026
+**Current Branch:** `main`
 
-## 🧠 Session Context
-We are troubleshooting a macOS Accessibility/TCC "Ghosting" issue that appears primarily in macOS 26.2 (Tahoe beta/update). The standard Homebrew `yabai` binary cannot be granted permissions.
+## Project State
 
-## 🛠 Critical Technical Workarounds
-**The "Renamed Binary" Strategy:**
-To bypass the corrupted TCC database entry for `yabai`, we use a unique binary name.
-1.  **Manual Action Required:** The user/agent must create this copy manually for now:
-    ```zsh
-    sudo cp /opt/homebrew/bin/yabai /opt/homebrew/bin/yabai-tomodachi
-    ```
-2.  **App Logic:** `YabaiTomodachi.swift` has been updated to:
-    -   Look for `yabai-tomodachi` *first*.
-    -   Use `yabai-tomodachi` when resolving symlinks for the "Permissions Helper".
-    -   Launch the service using this path.
+v2.0.0 shipped with complete menu redesign, DMG distribution, and user-friendly UX. MCP server has 19 macOS native tools.
 
-## 🐛 Known Issues
--   **Issue #001 (Silent Failure):** If no yabai binary is found, or if it's installed but stopped, clicking "Start Yabai" fails silently with a false positive "Success" notification.
--   **macOS 26.0 vs 26.2:**
-    -   **26.0 (MacBook/Tropy):** Works fine with standard `yabai`. Workaround is optional but safe.
-    -   **26.2 (Mac Studio):** **REQUIRES** the workaround.
+### Resolved Issues
+- **Issue #001 (Silent Failure):** Fixed Mar 12, 2026. `startYabai()` now checks `isYabaiRunning()` after delay and shows appropriate success/failure notification.
+- **Menu Redesign (Issue #10):** Completed in v2.0.0. Dynamic Start/Stop, layout radio selection, tools section, More submenu.
 
-## 📋 Next Steps
-1.  **Menu Redesign (Issue #10):** The current menu is cluttered. Needs grouping and clean up.
-2.  **Fix Issue #001:** Add proper error handling for missing binaries/failed starts.
-3.  **Verification:** Confirm the "renamed binary" fix works on the problematic Mac Studio.
+## Active Workarounds
 
-## ⚡️ Quick Start for Agents
-1.  `git checkout recovery/jules-update-v1.5`
-2.  `./build-test-app.sh`
-3.  Ensure `yabai` is installed (`brew install koekeishiya/formulae/yabai`).
-4.  If on macOS 26.2+, run the `cp` command above.
+**TCC "Renamed Binary" Strategy (macOS 26.2):**
+macOS 26.2 has a TCC database regression where `yabai` cannot be granted Accessibility permissions. The app's `findYabaiBinary()` looks for `/opt/homebrew/bin/yabai-tomodachi` first. Users on 26.2 need:
+```zsh
+sudo cp /opt/homebrew/bin/yabai /opt/homebrew/bin/yabai-tomodachi
+```
+- macOS 26.0: Works fine with standard `yabai`, workaround optional
+- macOS 26.2: **Requires** the workaround
+
+## Architecture
+
+- **Swift Menu Bar App** (`YabaiTomodachi.swift`) — main GUI, compiled with `swiftc`
+- **MCP Server** (`src/index.ts`) — TypeScript, exposes yabai tools to AI
+- **Xcode Project** (`Yabai-Tomodachi-xcode/`) — for building proper app bundles
+- Two Swift sources exist: `src/YabaiRestarter.swift` (old) and `YabaiTomodachi.swift` (current v2.0)
+
+## Quick Start
+1. Ensure on `main` branch
+2. Build: `swiftc YabaiTomodachi.swift -o yabai-tomodachi` or use Xcode project
+3. MCP: `npm install && npm run build`
+4. Ensure `yabai` is installed: `brew install koekeishiya/formulae/yabai`
+5. On macOS 26.2+, run the `cp` command above

@@ -101,9 +101,15 @@ GETTING STARTED
 3. Launch Yabai Tomodachi from your Applications folder (or Spotlight).
    It will appear as an icon in your menu bar.
 
-4. If macOS says the app "can't be opened":
-   Go to System Settings > Privacy & Security and click "Open Anyway".
-   Or run in Terminal:  xattr -d com.apple.quarantine /Applications/Yabai-Tomodachi.app
+4. If macOS says the app "can't be opened" or "cannot be verified":
+   This is normal — the app is not notarized by Apple (yet).
+
+   The easiest fix is to open Terminal and run:
+     xattr -cr /Applications/Yabai-Tomodachi.app
+
+   Then open the app again. It will launch normally from now on.
+
+   Alternatively: System Settings > Privacy & Security > scroll down > "Open Anyway".
 
 5. Grant Accessibility permissions when prompted.
    yabai needs this to manage your windows.

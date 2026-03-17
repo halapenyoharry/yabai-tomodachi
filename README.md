@@ -34,7 +34,11 @@ macOS doesn't have real window tiling. Pop!_OS has it. Windows has it. Mac users
 2. Drag `Yabai-Tomodachi.app` to Applications
 3. If you need yabai, double-click `Install Yabai.command` in the DMG
 4. Launch the app — it appears in your menu bar
-5. If macOS blocks it: System Settings > Privacy & Security > "Open Anyway"
+5. **If macOS says it "can't be opened" or "cannot be verified":** this is normal for apps not notarized by Apple. Open Terminal and run:
+   ```
+   xattr -cr /Applications/Yabai-Tomodachi.app
+   ```
+   Then open the app again. Alternatively: System Settings > Privacy & Security > "Open Anyway".
 
 ### Requirements
 
