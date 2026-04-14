@@ -132,18 +132,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.removeAllItems()
         
         // Service Control - Dynamic Start/Stop
-        if let currentYabaiPath = self.yabaiPath.isEmpty ? nil : self.yabaiPath {
-             // Basic check if process is running
-            let pgrepTask = Process()
-            pgrepTask.launchPath = "/usr/bin/pgrep"
-            pgrepTask.arguments = ["-x", "yabai"]
-            
-            // We need to run this synchronously to decide which menu item to show
-            // but in a real app, this should be cached/observed.
-            // For now, let's just use the cached state or a simple assumption.
-            // Better approach: Update menu right before it opens.
-        }
-
         // Add Service Status Item (Clickable to toggle)
         if isYabaiRunning() {
              let stopItem = NSMenuItem(title: "Stop Yabai", action: #selector(stopYabai), keyEquivalent: "")
@@ -235,20 +223,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     // Helper to check if yabai is running
     func isYabaiRunning() -> Bool {
-        let task = Process()
-        task.launchPath = "/usr/bin/pgrep"
-        task.arguments = ["-x", "yabai"]
+        let myPid = ProcessInfo.processInfo.processIdentifier
+        let names = ["yabai", "yabai-tomodachi"]
         
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        
-        do {
-            try task.run()
-            task.waitUntilExit()
-            return task.terminationStatus == 0
-        } catch {
-            return false
+        for name in names {
+            let task = Process()
+            task.launchPath = "/usr/bin/pgrep"
+            task.arguments = ["-x", name]
+
+            let pipe = Pipe()
+            task.standardOutput = pipe
+
+            do {
+                try task.run()
+                task.waitUntilExit()
+
+                if task.terminationStatus == 0 {
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    if let output = String(data: data, encoding: .utf8) {
+                        let pids = output.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: .newlines)
+                        for pidStr in pids {
+                            if let pid = Int32(pidStr), pid != myPid {
+                                return true
+                            }
+                        }
+                    }
+                }
+            } catch {}
         }
+
+        return false
     }
 
     // Helper to get current layout
@@ -279,12 +283,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         buildMenu() // Rebuild menu every time it opens to show correct status/layout
     }
 
-
-    
-    @objc func restartYabai() {
-        runCommand("yabai --restart-service")
-        showNotification("Yabai Restarted", "Yabai has been restarted")
-    }
     
     @objc func stopYabai() {
         // Try standard service stop
@@ -299,13 +297,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         task.arguments = ["-c", "launchctl stop com.koekeishiya.yabai"]
         try? task.run()
         task.waitUntilExit()
-        
-        // And even killall if it's stubborn (as user)
-        let killTask = Process()
-        killTask.launchPath = "/usr/bin/killall"
-        killTask.arguments = ["yabai"]
-        try? killTask.run()
-        killTask.waitUntilExit()
         
         showNotification("Yabai Stopped", "Yabai service has been stopped")
         
